@@ -1,5 +1,7 @@
 # confluence-outdated - Constant validation of Confluence document outdates
 
+[![Build Status](https://travis-ci.org/dodevops/confluence-outdated.svg?branch=master)](https://travis-ci.org/dodevops/confluence-outdated) ![npm](https://img.shields.io/npm/v/confluence-outdated)
+
 ## Introduction
 
 _confluence-outdated_ searches a Confluence space for documents that haven't been updated for a specified time and
