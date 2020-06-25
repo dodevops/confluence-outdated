@@ -16,7 +16,7 @@ module.exports = function (grunt) {
     copy: {
       test: {
         files: {
-          'test/coverage/instrument/': 'test/**/*.js',
+          'test/coverage/instrument/': ['test/**/*.js', 'resources/configurationDocument.html'],
         },
         options: {
           expand: true,
