@@ -3,7 +3,7 @@ import moment = require('moment')
 import { Logger } from 'loglevel'
 import log = require('loglevel')
 import { ConfluenceError } from '../error/ConfluenceError'
-import { DocumentInfo } from './documentInfo'
+import { DocumentInfo } from './DocumentInfo'
 import { Moment } from 'moment'
 
 /**

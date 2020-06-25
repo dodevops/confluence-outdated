@@ -1,9 +1,9 @@
 import 'mocha'
-import { Configuration } from '../lib/api/configuration'
+import { Configuration } from '../lib/api/Configuration'
 import chai = require('chai')
 import chaiAsPromised = require('chai-as-promised')
 import nock = require('nock')
-import { Confluence } from '../lib/api/confluence'
+import { Confluence } from '../lib/api/Confluence'
 import { MockServer } from './MockServer'
 
 chai.use(chaiAsPromised)
@@ -13,8 +13,8 @@ describe('The Confluence API', (): void => {
     const mockServer = new MockServer('https://example.com')
     mockServer.addSearchEndpoint()
     mockServer.addDocumentEndpoint()
-    const configuration = new Confluence('https://example.com', 'nobody', 'nothing')
-    const results = await configuration.findDocumentsOlderThan('', 1, 1)
+    const confluence = new Confluence('https://example.com', 'nobody', 'nothing')
+    const results = await confluence.findDocumentsOlderThan('', 1, 1)
     chai.expect(results).to.have.lengthOf(2)
     chai.expect(results[0].url).to.eq('https://example.com/display/SAMPLE/Test')
     chai.expect(results[0].author).to.eq('author')

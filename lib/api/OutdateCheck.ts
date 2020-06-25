@@ -1,8 +1,8 @@
-import { Configuration } from './configuration'
-import { Confluence } from './confluence'
+import { Configuration } from './Configuration'
+import { Confluence } from './Confluence'
 import { Logger } from 'loglevel'
 import log = require('loglevel')
-import { Notification } from './notification'
+import { Notification } from './Notification'
 
 /**
  * The main out of date checker

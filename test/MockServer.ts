@@ -10,7 +10,7 @@ export class MockServer {
                 <p>{{title}}</p>
                 <p><br></p>
                 <p>was last changed at {{lastVersionDate}}.</p>
-                <p>{{#if lastVersionMessage != &apos;&apos;}}</p>
+                <p>{{#if lastVersionMessage}}</p>
                 <p>The comment for the change was: {{lastVersionMessage}}</p>
                 <p>{{/if}}</p>
                 <p><br></p>
@@ -48,6 +48,10 @@ export class MockServer {
             <tr>
                 <th>Domain</th>
                 <td>example.com</td>
+            </tr>
+            <tr>
+                <th>NotificationFrom</th>
+                <td>Notification &lt;noreply@example.com&gt;</td>
             </tr>
             </tbody>
         </table>

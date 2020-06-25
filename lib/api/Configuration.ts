@@ -1,5 +1,5 @@
 import got from 'got'
-import { Check } from './check'
+import { Check } from './Check'
 import { Logger } from 'loglevel'
 import { ConfigurationError } from '../error/ConfigurationError'
 import * as SMTPTransport from 'nodemailer/lib/smtp-transport'
@@ -47,6 +47,11 @@ export class Configuration {
    * Domain to add to all usernames
    */
   public domain: string
+
+  /**
+   * From address for notifications
+   */
+  public notificationFrom: string
 
   /**
    * Transport options for nodemailer for the notifications
@@ -139,6 +144,7 @@ export class Configuration {
 
       this.domain = configuration.domain || null
       this.space = configuration.space || null
+      this.notificationFrom = configuration.notificationfrom || null
 
       // Load checks
 

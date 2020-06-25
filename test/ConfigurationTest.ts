@@ -1,5 +1,5 @@
 import 'mocha'
-import { Configuration } from '../lib/api/configuration'
+import { Configuration } from '../lib/api/Configuration'
 import { MockServer } from './MockServer'
 import chai = require('chai')
 import chaiAsPromised = require('chai-as-promised')
@@ -24,5 +24,7 @@ describe('The Configuration API', (): void => {
 
     chai.expect(configuration.transportOptions.host).to.eq('localhost')
     chai.expect(configuration.transportOptions.port).to.eq('25')
+
+    chai.expect(configuration.notificationFrom).to.eq('Notification <noreply@example.com>')
   })
 })
