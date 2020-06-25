@@ -113,12 +113,12 @@ export class MockServer {
             </colgroup>
             <tbody>
             <tr>
-                <th>Page</th>
+                <th>Pagepattern</th>
                 <th>Maintainer</th>
             </tr>
             <tr>
-                <td><br/></td>
-                <td><br/></td>
+                <td>Test2</td>
+                <td>maintainer</td>
             </tr>
             </tbody>
         </table>

@@ -1,36 +1,12 @@
-/**
- * @module confluence-outdated
- */
-/**
- */
+#!/usr/bin/env node
 
-// import needed modules
+import * as Path from 'path'
+import { CLI, Shim } from 'clime'
 
-import * as loglevel from 'loglevel'
-import Bluebird = require('bluebird')
+// The second parameter is the path to folder that contains command modules.
+const cli = new CLI('confluence-outdated', Path.join(__dirname, 'lib', 'commands'))
 
-/**
- * confluence-outdated - Constant validation of Confluence document outdates
- */
-export class ExampleClass {
-  /**
-   * Use a logger instance to log, what you're doing
-   */
-  private _log: loglevel.Logger = null
-
-  constructor() {
-    this._log = loglevel.getLogger('confluence-outdated:ExampleClass')
-  }
-
-  /**
-   * Be nice.
-   * @param {string} name Who are you?
-   * @return {Bluebird<string>} My greets to you
-   */
-  public helloWorld(name: string): Bluebird<string> {
-    if (name === '') {
-      return Bluebird.reject(new Error('Found nobody to greet'))
-    }
-    return Bluebird.resolve(`Hello ${name}`)
-  }
-}
+// Clime in its core provides an object-based command-line infrastructure.
+// To have it work as a common CLI, a shim needs to be applied:
+const shim = new Shim(cli)
+shim.execute(process.argv)

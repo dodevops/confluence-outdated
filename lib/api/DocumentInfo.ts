@@ -19,7 +19,7 @@ export interface DocumentInfo {
   /**
    * The date of the last version
    */
-  lastVersionDate: Moment
+  lastVersionDate: Moment | string
   /**
    * The edit message of the last version
    */
@@ -33,12 +33,12 @@ export interface DocumentInfo {
 export class DocumentInfo implements DocumentInfo {
   public id: number
   public author: string
-  public lastVersionDate: moment.Moment
+  public lastVersionDate: Moment | string
   public lastVersionMessage: string
   public title: string
   public url: string
 
-  constructor(id: number, author: string, lastVersionDate: moment.Moment, lastVersionMessage: string, title: string, url: string) {
+  constructor(id: number, author: string, lastVersionDate: Moment, lastVersionMessage: string, title: string, url: string) {
     this.id = id
     this.author = author
     this.lastVersionDate = lastVersionDate

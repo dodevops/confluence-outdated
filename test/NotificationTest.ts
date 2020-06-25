@@ -15,17 +15,22 @@ import * as Handlebars from 'handlebars'
 chai.use(chaiAsPromised)
 
 describe('The Notification API', (): void => {
-  it('should send notifications', async (): Promise<void> => {
-    const mockServer = new MockServer('https://example.com')
+  let mockServer, configuration, confluence, transportStub
+
+  beforeEach(async () => {
+    mockServer = new MockServer('https://example.com')
     mockServer.addConfigurationDocumentEndpoint()
     mockServer.addSearchEndpoint()
     mockServer.addDocumentEndpoint()
-    const configuration = new Configuration('https://example.com', 'nobody', 'nothing', '12345')
+    configuration = new Configuration('https://example.com', 'nobody', 'nothing', '12345')
     await configuration.load()
-    const confluence = new Confluence('https://example.com', 'nobody', 'nothing')
-    const transportStub = sinon.createStubInstance(Mail.prototype.constructor, {
+    confluence = new Confluence('https://example.com', 'nobody', 'nothing')
+    transportStub = sinon.createStubInstance(Mail.prototype.constructor, {
       sendMail: sinon.stub().resolves(),
     }) as Mail
+  })
+
+  it('should send notifications', async (): Promise<void> => {
     const notification = new Notification(configuration, confluence, transportStub)
     const documentInfo = new DocumentInfo(0, 'author', moment(), 'message', 'title', 'http://example.com')
     await notification.notify(documentInfo)
@@ -38,5 +43,25 @@ describe('The Notification API', (): void => {
         html: Handlebars.compile(MockServer.NOTIFICATION_BODY)(documentInfo),
       })
     ).to.be.true
+  })
+  it('should use a maintainer when configured', async (): Promise<void> => {
+    const notification = new Notification(configuration, confluence, transportStub)
+    const documentInfo = new DocumentInfo(0, 'author2', moment(), 'message', 'Test2', 'http://example.com')
+    await notification.notify(documentInfo)
+    chai.expect(((transportStub as unknown) as SinonStubbedInstance<Mail>).sendMail.calledOnce).to.be.true
+    chai.expect(
+      ((transportStub as unknown) as SinonStubbedInstance<Mail>).sendMail.calledWith({
+        from: 'Notification <noreply@example.com>',
+        to: 'maintainer@example.com',
+        subject: Handlebars.compile(MockServer.NOTIFICATION_SUBJECT)(documentInfo),
+        html: Handlebars.compile(MockServer.NOTIFICATION_BODY)(documentInfo),
+      })
+    ).to.be.true
+  })
+  it('should not send notifications on a dry run', async (): Promise<void> => {
+    const notification = new Notification(configuration, confluence, transportStub, true)
+    const documentInfo = new DocumentInfo(0, 'author', moment(), 'message', 'title', 'http://example.com')
+    await notification.notify(documentInfo)
+    chai.expect(((transportStub as unknown) as SinonStubbedInstance<Mail>).sendMail.notCalled).to.be.true
   })
 })

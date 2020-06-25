@@ -5,6 +5,7 @@ import { ConfigurationError } from '../error/ConfigurationError'
 import * as SMTPTransport from 'nodemailer/lib/smtp-transport'
 import log = require('loglevel')
 import * as cheerio from 'cheerio'
+import { Maintainer } from './Maintainer'
 
 /**
  * Configuration API
@@ -62,6 +63,11 @@ export class Configuration {
    * A list of checks for outdated documents
    */
   public checks: Array<Check>
+
+  /**
+   * A list of page maintainers
+   */
+  public maintainer: Array<Maintainer>
 
   /**
    * A Handlebars template for the notification mail subject
@@ -130,6 +136,9 @@ export class Configuration {
         throw e
       }
 
+      this._log.trace(`Configuration document content: 
+      ${configurationDocument.body.storage.value}`)
+
       const $ = cheerio.load(configurationDocument.body.storage.value)
 
       if ($ === null) {
@@ -152,6 +161,15 @@ export class Configuration {
         return {
           labels: value.labels.split(','),
           maxAge: parseInt(value.maxage),
+        }
+      })
+
+      // Load maintainer
+
+      this.maintainer = this._getConfigurationFromPanel($, 'Maintainer').map<Maintainer>((value) => {
+        return {
+          pagePattern: new RegExp(value.pagepattern),
+          maintainer: value.maintainer,
         }
       })
 
