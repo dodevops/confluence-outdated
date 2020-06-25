@@ -28,4 +28,12 @@ describe('The Confluence API', (): void => {
     chai.expect(results[1].lastVersionMessage).to.eq('')
     chai.expect(results[1].title).to.eq('Test2')
   })
+
+  it('should add a configuration document', async (): Promise<void> => {
+    const mockServer = new MockServer('https://example.com')
+    mockServer.addCreateEndpoint()
+    const confluence = new Confluence('https://example.com', 'nobody', 'nothing')
+    const result = await confluence.createConfigurationDocument('example', 'test', '0123')
+    chai.expect(result).to.eq('12345')
+  })
 })

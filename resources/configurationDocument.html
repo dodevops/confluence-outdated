@@ -1,0 +1,119 @@
+<ac:structured-macro ac:name="panel" ac:schema-version="1" ac:macro-id="4671afbe-d914-470a-bb9e-8b7321f60f79">
+    <ac:parameter ac:name="title">Configuration</ac:parameter>
+    <ac:rich-text-body>
+        <table class="wrapped">
+            <colgroup>
+                <col/>
+                <col/>
+            </colgroup>
+            <tbody>
+            <tr>
+                <th>Space</th>
+                <td><i>Enter the space where you want to check</i></td>
+            </tr>
+            <tr>
+                <th>Domain</th>
+                <td><i>If you're not using e-mail addresses as usernames, setup your default mail domain here</i></td>
+            </tr>
+            <tr>
+                <th>NotificationFrom</th>
+                <td><i>Enter the From mail address used for notifications here</i></td>
+            </tr>
+            </tbody>
+        </table>
+    </ac:rich-text-body>
+</ac:structured-macro>
+<ac:structured-macro ac:name="panel" ac:schema-version="1" ac:macro-id="ecfe796e-b701-4f30-a74a-b94dbb33daff">
+    <ac:parameter ac:name="title">SMTP</ac:parameter>
+    <ac:rich-text-body>
+        <i>See <a href="https://nodemailer.com/smtp/">the nodemailer SMTP documentation</a> for all available options here.</i>
+        <table class="wrapped">
+            <colgroup>
+                <col/>
+                <col/>
+            </colgroup>
+            <tbody>
+            <tr>
+                <th>Host</th>
+                <td>localhost</td>
+            </tr>
+            <tr>
+                <th>Port</th>
+                <td>25</td>
+            </tr>
+            </tbody>
+        </table>
+    </ac:rich-text-body>
+</ac:structured-macro>
+<ac:structured-macro ac:name="panel" ac:schema-version="1" ac:macro-id="f19cd8b2-57e0-4c68-a823-8a2daee08c12">
+    <ac:parameter ac:name="title">Checks</ac:parameter>
+    <ac:rich-text-body>
+        <i>This panel includes a list of checks to carry out. The script will search for a list of labels (separated by ,), which a document candidate must have and a maximum age in days for that document.</i>
+        <table class="wrapped">
+            <colgroup>
+                <col/>
+                <col/>
+            </colgroup>
+            <tbody>
+            <tr>
+                <th>Labels</th>
+                <th>MaxAge</th>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </ac:rich-text-body>
+</ac:structured-macro>
+<ac:structured-macro ac:name="panel" ac:schema-version="1" ac:macro-id="1d192d60-7e69-4af8-8dd6-4006a7bfc952">
+    <ac:parameter ac:name="title">Maintainer</ac:parameter>
+    <ac:rich-text-body>
+        <i>This table holds a list of RegExp patterns for page titles and the associated maintainer for this pages, which will be notified instead of the last version's author.</i>
+        <table class="wrapped">
+            <colgroup>
+                <col/>
+                <col/>
+            </colgroup>
+            <tbody>
+            <tr>
+                <th>PagePattern</th>
+                <th>Maintainer</th>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </ac:rich-text-body>
+</ac:structured-macro>
+<ac:structured-macro ac:name="panel" ac:schema-version="1" ac:macro-id="93f1d981-c841-4cb4-b6e2-5940dfe69132">
+    <ac:parameter ac:name="title">Notification Template</ac:parameter>
+    <ac:rich-text-body>
+        <i>The two panels inside of this panel configure the subject and body template for the notifications.
+            These are <a href="https://handlebarsjs.com/guide/">Handlebars</a> templates, which get
+            <a href="https://github.com/dodevops/confluence-outdated/blob/master/lib/api/DocumentInfo.ts#L6">this object</a>
+        as their context.</i>
+        <ac:structured-macro ac:name="panel" ac:schema-version="1" ac:macro-id="f8503e48-c671-4ed6-897c-def2b2c3fa29">
+            <ac:parameter ac:name="title">Subject</ac:parameter>
+            <ac:rich-text-body>
+                <p>Dokument outdated: {{title}}</p></ac:rich-text-body>
+        </ac:structured-macro>
+        <ac:structured-macro ac:name="panel" ac:schema-version="1" ac:macro-id="63c16112-dea3-434e-b1cb-467ff4e36d5f">
+            <ac:parameter ac:name="title">Body</ac:parameter>
+            <ac:rich-text-body>
+                <p>Greetings {{author}},</p>
+                <p>The most recent change of the document</p>
+                <p>{{title}}</p>
+                <p>was at {{lastVersionDate}}.</p>
+                <p>{{#if lastVersionMessage}}</p>
+                <p>The edit comment used was: {{lastVersionMessage}}</p>
+                <p>{{/if}}</p>
+                <p>You can find the document here: {{url}}</p>
+                <p>Please check, wether the document needs any updates or save the document again stating that it is still valid.</p>
+                <p>Cheers, confluence-outdated</p></ac:rich-text-body>
+        </ac:structured-macro>
+    </ac:rich-text-body>
+</ac:structured-macro>

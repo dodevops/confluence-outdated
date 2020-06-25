@@ -217,4 +217,19 @@ export class MockServer {
         title: 'Test2',
       })
   }
+
+  public addCreateEndpoint(): void {
+    this._scope
+      .post('/rest/api/content')
+      .basicAuth({
+        user: 'nobody',
+        pass: 'nothing',
+      })
+      .reply(200, (uri, requestBody) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const requestObject = requestBody as Record<string, any>
+        requestObject.id = '12345'
+        return requestObject
+      })
+  }
 }

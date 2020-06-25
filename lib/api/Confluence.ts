@@ -5,6 +5,8 @@ import log = require('loglevel')
 import { ConfluenceError } from '../error/ConfluenceError'
 import { DocumentInfo } from './DocumentInfo'
 import { Moment } from 'moment'
+import * as fs from 'fs'
+import * as path from 'path'
 
 /**
  * Confluence API
@@ -119,5 +121,36 @@ export class Confluence {
     const documentInfo = new DocumentInfo(documentId, author, lastVersionDate, lastVersionMessage, title, url)
 
     return documentInfo
+  }
+
+  public async createConfigurationDocument(space: string, title: string, parentId: string): Promise<string> {
+    const template = await fs.promises.readFile(path.join(__dirname, '..', '..', 'resources', 'configurationDocument.html'), 'utf-8')
+
+    const response = await got
+      .post(`${this.confluenceUrl}/rest/api/content`, {
+        json: {
+          type: 'page',
+          title: title,
+          space: {
+            key: space,
+          },
+          ancestors: [
+            {
+              id: parentId,
+            },
+          ],
+          body: {
+            storage: {
+              value: template,
+              representation: 'storage',
+            },
+          },
+        },
+        username: this.confluenceUser,
+        password: this.confluencePassword,
+      })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .json<any>()
+    return response.id
   }
 }
