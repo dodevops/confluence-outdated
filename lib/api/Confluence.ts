@@ -93,7 +93,7 @@ export class Confluence {
 
     const lastVersionDate: Moment = moment(lastVersionDateString)
 
-    if (((lastVersionDate as unknown) as boolean) === false) {
+    if ((lastVersionDate as unknown as boolean) === false) {
       const errorMessage = `Moment can't interpret the version date ${lastVersionDateString}`
       this._log.error(errorMessage)
       throw new ConfluenceError(errorMessage)

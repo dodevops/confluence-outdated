@@ -34,9 +34,9 @@ describe('The Notification API', (): void => {
     const notification = new Notification(configuration, confluence, transportStub)
     const documentInfo = new DocumentInfo(0, 'author', moment(), 'message', 'title', 'http://example.com')
     await notification.notify(documentInfo)
-    chai.expect(((transportStub as unknown) as SinonStubbedInstance<Mail>).sendMail.calledOnce).to.be.true
+    chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledOnce).to.be.true
     chai.expect(
-      ((transportStub as unknown) as SinonStubbedInstance<Mail>).sendMail.calledWith({
+      (transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledWith({
         from: 'Notification <noreply@example.com>',
         to: 'author@example.com',
         subject: Handlebars.compile(MockServer.NOTIFICATION_SUBJECT)(documentInfo),
@@ -48,9 +48,9 @@ describe('The Notification API', (): void => {
     const notification = new Notification(configuration, confluence, transportStub)
     const documentInfo = new DocumentInfo(0, 'author2', moment(), 'message', 'Test2', 'http://example.com')
     await notification.notify(documentInfo)
-    chai.expect(((transportStub as unknown) as SinonStubbedInstance<Mail>).sendMail.calledOnce).to.be.true
+    chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledOnce).to.be.true
     chai.expect(
-      ((transportStub as unknown) as SinonStubbedInstance<Mail>).sendMail.calledWith({
+      (transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledWith({
         from: 'Notification <noreply@example.com>',
         to: 'maintainer@example.com',
         subject: Handlebars.compile(MockServer.NOTIFICATION_SUBJECT)(documentInfo),
@@ -62,6 +62,6 @@ describe('The Notification API', (): void => {
     const notification = new Notification(configuration, confluence, transportStub, true)
     const documentInfo = new DocumentInfo(0, 'author', moment(), 'message', 'title', 'http://example.com')
     await notification.notify(documentInfo)
-    chai.expect(((transportStub as unknown) as SinonStubbedInstance<Mail>).sendMail.notCalled).to.be.true
+    chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.notCalled).to.be.true
   })
 })

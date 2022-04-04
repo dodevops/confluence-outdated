@@ -3,9 +3,10 @@ import { Check } from './Check'
 import { Logger } from 'loglevel'
 import { ConfigurationError } from '../error/ConfigurationError'
 import * as SMTPTransport from 'nodemailer/lib/smtp-transport'
-import log = require('loglevel')
 import * as cheerio from 'cheerio'
 import { Maintainer } from './Maintainer'
+import log = require('loglevel')
+import Root = cheerio.Root
 
 /**
  * Configuration API
@@ -101,7 +102,7 @@ export class Configuration {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private _getConfigurationFromPanel($: CheerioStatic, panelName: string): Array<any> {
+  private _getConfigurationFromPanel($: Root, panelName: string): Array<any> {
     const keys = $(`ac\\:parameter:contains("${panelName}") + ac\\:rich-text-body table tr th`)
     const values = $(`ac\\:parameter:contains("${panelName}") + ac\\:rich-text-body table tr td`)
     const rows = $(`ac\\:parameter:contains("${panelName}") + ac\\:rich-text-body table tr td`).parent()
