@@ -22,9 +22,6 @@ describe('The Configuration API', (): void => {
     chai.expect(configuration.notificationBodyTemplate).to.eq(MockServer.NOTIFICATION_BODY)
     chai.expect(configuration.notificationSubjectTemplate).to.eq(MockServer.NOTIFICATION_SUBJECT)
 
-    chai.expect(configuration.transportOptions.host).to.eq('localhost')
-    chai.expect(configuration.transportOptions.port).to.eq('25')
-
     chai.expect(configuration.notificationFrom).to.eq('Notification <noreply@example.com>')
   })
 })

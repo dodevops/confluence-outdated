@@ -2,7 +2,6 @@ import got from 'got'
 import { Check } from './Check'
 import { Logger } from 'loglevel'
 import { ConfigurationError } from '../error/ConfigurationError'
-import * as SMTPTransport from 'nodemailer/lib/smtp-transport'
 import * as cheerio from 'cheerio'
 import { Maintainer } from './Maintainer'
 import log = require('loglevel')
@@ -56,11 +55,6 @@ export class Configuration {
   public notificationFrom: string
 
   /**
-   * Transport options for nodemailer for the notifications
-   */
-  public transportOptions: SMTPTransport.Options
-
-  /**
    * A list of checks for outdated documents
    */
   public checks: Array<Check>
@@ -102,7 +96,7 @@ export class Configuration {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private _getConfigurationFromPanel($: Root, panelName: string): Array<any> {
+  private _getConfigurationFromPanel($: Root, panelName: string, lowerCase = true): Array<any> {
     const keys = $(`ac\\:parameter:contains("${panelName}") + ac\\:rich-text-body table tr th`)
     const values = $(`ac\\:parameter:contains("${panelName}") + ac\\:rich-text-body table tr td`)
     const rows = $(`ac\\:parameter:contains("${panelName}") + ac\\:rich-text-body table tr td`).parent()
@@ -110,7 +104,11 @@ export class Configuration {
     for (let i = 0; i < rows.length; i++) {
       const rowObject = {}
       keys.each((index, key) => {
-        rowObject[$(key).text().toLowerCase()] = $(values[index + i * 2]).text()
+        let configurationKey = $(key).text()
+        if (lowerCase) {
+          configurationKey = configurationKey.toLowerCase()
+        }
+        rowObject[configurationKey] = $(values[index + i * 2]).text()
       })
       returnObject.push(rowObject)
     }
@@ -173,8 +171,6 @@ export class Configuration {
           maintainer: value.maintainer,
         }
       })
-
-      this.transportOptions = this._getConfigurationFromPanel($, 'SMTP')[0]
 
       this.notificationSubjectTemplate = $(
         'ac\\:parameter:contains("Notification Template") + ac\\:rich-text-body ac\\:parameter:contains("Subject") + ac\\:rich-text-body'

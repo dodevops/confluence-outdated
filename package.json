@@ -15,7 +15,8 @@
     "url": ""
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "prepare": "grunt build"
   },
   "files": [
     "index.d.ts",

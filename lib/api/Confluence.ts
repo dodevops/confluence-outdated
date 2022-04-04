@@ -75,7 +75,7 @@ export class Confluence {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }).json<any>()
 
-    const author = (document && document.version && document.version.by && document.version.by.username) || null
+    const author = document.version.by.username ?? null
 
     if (!author) {
       this._log.error(`Can't get author from this document:

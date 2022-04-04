@@ -40,7 +40,7 @@ export default class extends Command {
 
     const confluence = new Confluence(options.confluenceUrl, options.confluenceUser, options.confluencePassword)
 
-    const pageId = confluence.createConfigurationDocument(options.space, options.title, options.parentId)
+    const pageId = await confluence.createConfigurationDocument(options.space, options.title, options.parentId)
 
     return `The configuration document was created with the ID
     ${pageId}

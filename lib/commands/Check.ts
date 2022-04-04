@@ -20,6 +20,14 @@ export class CheckOptions extends DefaultOptions {
     toggle: true,
   })
   dryRun: boolean
+
+  @option({
+    name: 'smtpurl',
+    flag: 's',
+    description: 'SMTP URL (check out https://nodemailer.com/smtp/ for options)',
+    required: true,
+  })
+  smtpTransportUrl: string
 }
 
 @command({
@@ -42,7 +50,7 @@ export default class extends Command {
 
     const confluence = new Confluence(options.confluenceUrl, options.confluenceUser, options.confluencePassword)
 
-    const notification = new Notification(configuration, confluence, null, options.dryRun)
+    const notification = new Notification(configuration, options.smtpTransportUrl, confluence, null, options.dryRun)
 
     for (const check of configuration.checks) {
       log.debug(`Checking for documents older than ${check.maxAge} day(s) with label(s) ${check.labels.join(',')}`)

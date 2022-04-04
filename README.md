@@ -25,7 +25,7 @@ _confluence-outdated_ includes a command to create a template document:
 
 Example:
 
-    confluence-outdated createconfigurationdocument --url https://example.com/confluence --user somebody --password secret --space CM --title "My configuration document" --parentId 12345
+    confluence-outdated CreateConfigurationDocument --url https://example.com/confluence --user somebody --password secret --space CM --title "My configuration document" --parentId 12345
 
 The command will output the page ID for the configuration document and a link to it.
 
@@ -58,6 +58,15 @@ subject and the body of the notification mails.
 
 They will get [this object](https://github.com/dodevops/confluence-outdated/blob/master/lib/api/DocumentInfo.ts#L6) as
 a context for the template.
+
+## Usage
+
+After the configuration document is properly setup, run *confluence-outdated* on a regular basis:
+
+    confluence-outdated Check --url https://example.com/confluence --user somebody --password secret -i 123456 -s "smtp://localhost:25/?ignoreTLS=true"
+
+This will fetch the confluence document with the id 123456 as the configuration and check all required documentation as
+configured. The SMTP url is based on the [nodemailer smtp transport](https://nodemailer.com/smtp/).
 
 ## Development
 

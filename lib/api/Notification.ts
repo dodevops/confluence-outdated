@@ -16,10 +16,10 @@ export class Notification {
   private _log: Logger
   private readonly _dryRun: boolean
 
-  constructor(configuration: Configuration, confluence: Confluence, transport: Mail = null, dryRun = false) {
+  constructor(configuration: Configuration, smtpTransportUrl: string, confluence: Confluence, transport: Mail = null, dryRun = false) {
     this._configuration = configuration
     this._confluence = confluence
-    this._transport = transport || createTransport(this._configuration.transportOptions)
+    this._transport = transport || createTransport(smtpTransportUrl)
 
     this._log = log.getLogger('Notification')
     this._dryRun = dryRun
@@ -40,9 +40,14 @@ export class Notification {
       }
     }
 
+    let to = documentInfo.author
+    if (this._configuration.domain) {
+      to = `${to}@${this._configuration.domain}`
+    }
+
     const mailOptions = {
       from: this._configuration.notificationFrom,
-      to: `${documentInfo.author}@${this._configuration.domain}`,
+      to: to,
       subject: subjectTemplate(documentInfo),
       html: bodyTemplate(documentInfo),
     }
