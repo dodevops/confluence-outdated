@@ -1,17 +1,17 @@
 # confluence-outdated - Constant validation of Confluence document outdates
 
-[![Build Status](https://travis-ci.org/dodevops/confluence-outdated.svg?branch=master)](https://travis-ci.org/dodevops/confluence-outdated) ![npm](https://img.shields.io/npm/v/confluence-outdated)
+[![Docker](https://github.com/dodevops/confluence-outdated/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/dodevops/confluence-outdated/actions/workflows/docker-publish.yml)
 
 ## Introduction
 
 _confluence-outdated_ searches a Confluence space for documents that haven't been updated for a specified time and
 notifies the author of the last version of each document or a separate page maintainer.
 
-## Installation
+## Usage
 
-Install _confluence-outdated_ globally running
+_confluence-outdated_ can be used with Docker to quickly run it without any further dependencies.
 
-    npm install -g confluence-outdated
+    docker run --rm -it ghcr.io/dodevops/confluence-outdated:main <arguments> 
 
 ## Configuration Document
 
@@ -21,7 +21,7 @@ _confluence-outdated_ reads its configuration from a Confluence document.
 The structure of this document is based on Panels and tables. To ease the creation of this document,
 _confluence-outdated_ includes a command to create a template document:
 
-    confluence-outdated createconfigurationdocument --url <Confluence base URL> --user <Username> --password <Password> --space <Key of space that should hold the document> --title <Title for the configuration document> --parentId <Page ID that the configuration document is place under>
+    confluence-outdated CreateConfigurationDocument --url <Confluence base URL> --user <Username> --password <Password> --space <Key of space that should hold the document> --title <Title for the configuration document> --parentId <Page ID that the configuration document is place under>
 
 Example:
 
