@@ -32,7 +32,7 @@ describe('The Notification API', (): void => {
 
   it('should send notifications', async (): Promise<void> => {
     const notification = new Notification(configuration, '', confluence, transportStub)
-    const documentInfo = new DocumentInfo(0, 'author', moment(), 'message', 'title', 'http://example.com')
+    const documentInfo = new DocumentInfo(0, 'author', moment(), 'message', 'title', ['main'], 'http://example.com')
     await notification.notify(documentInfo)
     chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledOnce).to.be.true
     chai.expect(
@@ -46,7 +46,7 @@ describe('The Notification API', (): void => {
   })
   it('should use a maintainer when configured', async (): Promise<void> => {
     const notification = new Notification(configuration, '', confluence, transportStub)
-    const documentInfo = new DocumentInfo(0, 'author2', moment(), 'message', 'Test2', 'http://example.com')
+    const documentInfo = new DocumentInfo(0, 'author2', moment(), 'message', 'Test2', ['main', 'Test'], 'http://example.com')
     await notification.notify(documentInfo)
     chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledOnce).to.be.true
     chai.expect(
@@ -60,7 +60,7 @@ describe('The Notification API', (): void => {
   })
   it('should not send notifications on a dry run', async (): Promise<void> => {
     const notification = new Notification(configuration, '', confluence, transportStub, true)
-    const documentInfo = new DocumentInfo(0, 'author', moment(), 'message', 'title', 'http://example.com')
+    const documentInfo = new DocumentInfo(0, 'author', moment(), 'message', 'title', ['main'], 'http://example.com')
     await notification.notify(documentInfo)
     chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.notCalled).to.be.true
   })

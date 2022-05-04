@@ -68,7 +68,7 @@ export class Confluence {
    */
   public async getDocumentInfo(documentId: number): Promise<DocumentInfo> {
     this._log.debug(`Getting document information of document ${documentId}`)
-    const documentUrl = `${this.confluenceUrl}/rest/api/content/${documentId}`
+    const documentUrl = `${this.confluenceUrl}/rest/api/content/${documentId}?expand=ancestors`
     const document = await got(documentUrl, {
       username: this.confluenceUser,
       password: this.confluencePassword,
@@ -118,7 +118,9 @@ export class Confluence {
       throw new ConfluenceError(`Document ${documentId} has no URL}`)
     }
 
-    const documentInfo = new DocumentInfo(documentId, author, lastVersionDate, lastVersionMessage, title, url)
+    const path = document.ancestors.reverse().map((ancestor) => ancestor.title)
+
+    const documentInfo = new DocumentInfo(documentId, author, lastVersionDate, lastVersionMessage, title, path, url)
 
     return documentInfo
   }

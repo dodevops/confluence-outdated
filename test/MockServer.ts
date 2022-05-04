@@ -32,10 +32,10 @@ export class MockServer {
         body: {
           storage: {
             value: `
-          <ac:structured-macro ac:name="panel" ac:schema-version="1" ac:macro-id="4671afbe-d914-470a-bb9e-8b7321f60f79">
-    <ac:parameter ac:name="title">Configuration</ac:parameter>
+          <ac:structured-macro ac:name='panel' ac:schema-version='1' ac:macro-id='4671afbe-d914-470a-bb9e-8b7321f60f79'>
+    <ac:parameter ac:name='title'>Configuration</ac:parameter>
     <ac:rich-text-body>
-        <table class="wrapped">
+        <table class='wrapped'>
             <colgroup>
                 <col/>
                 <col/>
@@ -57,8 +57,8 @@ export class MockServer {
         </table>
     </ac:rich-text-body>
 </ac:structured-macro>
-<ac:structured-macro ac:name="panel" ac:schema-version="1" ac:macro-id="ecfe796e-b701-4f30-a74a-b94dbb33daff">
-    <ac:parameter ac:name="title">SMTP</ac:parameter>
+<ac:structured-macro ac:name='panel' ac:schema-version='1' ac:macro-id='ecfe796e-b701-4f30-a74a-b94dbb33daff'>
+    <ac:parameter ac:name='title'>SMTP</ac:parameter>
     <ac:rich-text-body>
         <table>
             <colgroup>
@@ -68,20 +68,20 @@ export class MockServer {
             <tbody>
             <tr>
                 <th>Host</th>
-                <td colspan="1">localhost</td>
+                <td colspan='1'>localhost</td>
             </tr>
             <tr>
                 <th>Port</th>
-                <td colspan="1">25</td>
+                <td colspan='1'>25</td>
             </tr>
             </tbody>
         </table>
     </ac:rich-text-body>
 </ac:structured-macro>
-<ac:structured-macro ac:name="panel" ac:schema-version="1" ac:macro-id="f19cd8b2-57e0-4c68-a823-8a2daee08c12">
-    <ac:parameter ac:name="title">Checks</ac:parameter>
+<ac:structured-macro ac:name='panel' ac:schema-version='1' ac:macro-id='f19cd8b2-57e0-4c68-a823-8a2daee08c12'>
+    <ac:parameter ac:name='title'>Checks</ac:parameter>
     <ac:rich-text-body>
-        <table class="wrapped">
+        <table class='wrapped'>
             <colgroup>
                 <col/>
                 <col/>
@@ -96,17 +96,17 @@ export class MockServer {
                 <td>356</td>
             </tr>
             <tr>
-                <td colspan="1">test2</td>
-                <td colspan="1">1234</td>
+                <td colspan='1'>test2</td>
+                <td colspan='1'>1234</td>
             </tr>
             </tbody>
         </table>
     </ac:rich-text-body>
 </ac:structured-macro>
-<ac:structured-macro ac:name="panel" ac:schema-version="1" ac:macro-id="1d192d60-7e69-4af8-8dd6-4006a7bfc952">
-    <ac:parameter ac:name="title">Maintainer</ac:parameter>
+<ac:structured-macro ac:name='panel' ac:schema-version='1' ac:macro-id='1d192d60-7e69-4af8-8dd6-4006a7bfc952'>
+    <ac:parameter ac:name='title'>Maintainer</ac:parameter>
     <ac:rich-text-body>
-        <table class="wrapped">
+        <table class='wrapped'>
             <colgroup>
                 <col/>
                 <col/>
@@ -117,22 +117,22 @@ export class MockServer {
                 <th>Maintainer</th>
             </tr>
             <tr>
-                <td>Test2</td>
+                <td>main/Test/.*</td>
                 <td>maintainer</td>
             </tr>
             </tbody>
         </table>
     </ac:rich-text-body>
 </ac:structured-macro>
-<ac:structured-macro ac:name="panel" ac:schema-version="1" ac:macro-id="93f1d981-c841-4cb4-b6e2-5940dfe69132">
-    <ac:parameter ac:name="title">Notification Template</ac:parameter>
+<ac:structured-macro ac:name='panel' ac:schema-version='1' ac:macro-id='93f1d981-c841-4cb4-b6e2-5940dfe69132'>
+    <ac:parameter ac:name='title'>Notification Template</ac:parameter>
     <ac:rich-text-body>
-        <ac:structured-macro ac:name="panel" ac:schema-version="1" ac:macro-id="f8503e48-c671-4ed6-897c-def2b2c3fa29">
-            <ac:parameter ac:name="title">Subject</ac:parameter>
+        <ac:structured-macro ac:name='panel' ac:schema-version='1' ac:macro-id='f8503e48-c671-4ed6-897c-def2b2c3fa29'>
+            <ac:parameter ac:name='title'>Subject</ac:parameter>
             <ac:rich-text-body><p>${MockServer.NOTIFICATION_SUBJECT}</p></ac:rich-text-body>
         </ac:structured-macro>
-        <ac:structured-macro ac:name="panel" ac:schema-version="1" ac:macro-id="63c16112-dea3-434e-b1cb-467ff4e36d5f">
-            <ac:parameter ac:name="title">Body</ac:parameter>
+        <ac:structured-macro ac:name='panel' ac:schema-version='1' ac:macro-id='63c16112-dea3-434e-b1cb-467ff4e36d5f'>
+            <ac:parameter ac:name='title'>Body</ac:parameter>
             <ac:rich-text-body>${MockServer.NOTIFICATION_BODY}</ac:rich-text-body>
         </ac:structured-macro>
     </ac:rich-text-body>
@@ -179,7 +179,7 @@ export class MockServer {
 
   public addDocumentEndpoint(): void {
     this._scope
-      .get('/rest/api/content/123')
+      .get('/rest/api/content/123?expand=ancestors')
       .basicAuth({
         user: 'nobody',
         pass: 'nothing',
@@ -189,6 +189,11 @@ export class MockServer {
           base: 'https://example.com',
           webui: '/display/SAMPLE/Test',
         },
+        ancestors: [
+          {
+            title: 'main',
+          },
+        ],
         version: {
           by: {
             username: 'author',
@@ -198,7 +203,7 @@ export class MockServer {
         },
         title: 'Test',
       })
-      .get('/rest/api/content/234')
+      .get('/rest/api/content/234?expand=ancestors')
       .basicAuth({
         user: 'nobody',
         pass: 'nothing',
@@ -208,6 +213,14 @@ export class MockServer {
           base: 'https://example.com',
           webui: '/display/SAMPLE/Test2',
         },
+        ancestors: [
+          {
+            title: 'main',
+          },
+          {
+            title: 'Test',
+          },
+        ],
         version: {
           by: {
             username: 'author2',

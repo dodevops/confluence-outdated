@@ -48,7 +48,7 @@ A table of checks that will be carried out.
 
 A table of maintainers for pages.
 
-- PagePattern: A regular expression that is matched against the document title
+- PagePattern: A regular expression that is matched against the full document path. Parent pages are separated through a "/".
 - Maintainer: The user that should receive all notifications for pages matching this pattern
 
 ### Panel "Notification Template"

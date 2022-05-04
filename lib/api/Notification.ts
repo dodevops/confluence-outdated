@@ -35,7 +35,7 @@ export class Notification {
     documentInfo.lastVersionDate = (documentInfo.lastVersionDate as Moment).toISOString() as string
 
     for (const maintainer of this._configuration.maintainer) {
-      if (maintainer.pagePattern.test(documentInfo.title)) {
+      if (documentInfo.matchesPath(maintainer.pagePattern)) {
         documentInfo.author = maintainer.maintainer
       }
     }
