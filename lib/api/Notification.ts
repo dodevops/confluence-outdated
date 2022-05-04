@@ -36,18 +36,18 @@ export class Notification {
 
     for (const maintainer of this._configuration.maintainer) {
       if (documentInfo.matchesPath(maintainer.pagePattern)) {
-        documentInfo.author = maintainer.maintainer
+        documentInfo.author = maintainer.maintainer.replace(/_lastauthor/, documentInfo.author)
       }
     }
 
-    let to = documentInfo.author
+    let to = documentInfo.author.split(/,/)
     if (this._configuration.domain) {
-      to = `${to}@${this._configuration.domain}`
+      to = to.map((target) => `${target}@${this._configuration.domain}`)
     }
 
     const mailOptions = {
       from: this._configuration.notificationFrom,
-      to: to,
+      to: to.join(','),
       subject: subjectTemplate(documentInfo),
       html: bodyTemplate(documentInfo),
     }

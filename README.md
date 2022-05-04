@@ -49,7 +49,8 @@ A table of checks that will be carried out.
 A table of maintainers for pages.
 
 - PagePattern: A regular expression that is matched against the full document path. Parent pages are separated through a "/".
-- Maintainer: The user that should receive all notifications for pages matching this pattern
+- Maintainer: The users that should receive all notifications for pages matching this pattern (separated by ,). You can 
+  use `_lastauthor` to reference the last author of the page) 
 
 ### Panel "Notification Template"
 

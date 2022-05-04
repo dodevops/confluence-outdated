@@ -118,7 +118,7 @@ export class MockServer {
             </tr>
             <tr>
                 <td>main/Test/.*</td>
-                <td>maintainer</td>
+                <td>maintainer,_lastauthor</td>
             </tr>
             </tbody>
         </table>

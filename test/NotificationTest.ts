@@ -52,7 +52,7 @@ describe('The Notification API', (): void => {
     chai.expect(
       (transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledWith({
         from: 'Notification <noreply@example.com>',
-        to: 'maintainer@example.com',
+        to: 'maintainer@example.com,author2@example.com',
         subject: Handlebars.compile(MockServer.NOTIFICATION_SUBJECT)(documentInfo),
         html: Handlebars.compile(MockServer.NOTIFICATION_BODY)(documentInfo),
       })
