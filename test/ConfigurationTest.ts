@@ -19,6 +19,8 @@ describe('The Configuration API', (): void => {
     chai.expect(configuration.checks[1].labels).to.contain('test2')
     chai.expect(configuration.checks[1].maxAge).to.eq(1234)
 
+    chai.expect(configuration.maintainer).to.have.lengthOf(1)
+
     chai.expect(configuration.notificationBodyTemplate).to.eq(MockServer.NOTIFICATION_BODY)
     chai.expect(configuration.notificationSubjectTemplate).to.eq(MockServer.NOTIFICATION_SUBJECT)
 
