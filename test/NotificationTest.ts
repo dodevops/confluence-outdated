@@ -64,4 +64,10 @@ describe('The Notification API', (): void => {
     await notification.notify(documentInfo)
     chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.notCalled).to.be.true
   })
+  it('should not send notifications for an excluded document', async (): Promise<void> => {
+    const notification = new Notification(configuration, '', confluence, transportStub)
+    const documentInfo = new DocumentInfo(0, 'author2', moment(), 'message', 'NOT', ['main', 'Test'], 'http://example.com')
+    await notification.notify(documentInfo)
+    chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledOnce).to.be.false
+  })
 })

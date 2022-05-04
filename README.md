@@ -52,6 +52,11 @@ A table of maintainers for pages.
 - Maintainer: The users that should receive all notifications for pages matching this pattern (separated by ,). You can 
   use `_lastauthor` to reference the last author of the page) 
 
+### Panel "Exceptions"
+
+A list of regular expressions that are matched against all document paths. If a pattern matches, that document will be
+excluded from notifications.
+
 ### Panel "Notification Template"
 
 This panel includes two child panels which hold [Handlebars](https://handlebarsjs.com/guide/) templates for the

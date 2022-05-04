@@ -8,6 +8,7 @@ import { Logger } from 'loglevel'
 import { Moment } from 'moment'
 import log = require('loglevel')
 import moment = require('moment')
+import doc = Mocha.reporters.doc
 
 export class Notification {
   private _configuration: Configuration
@@ -26,6 +27,13 @@ export class Notification {
   }
 
   public async notify(documentInfo: DocumentInfo): Promise<void> {
+    for (const exception of this._configuration.exceptions) {
+      if (documentInfo.matchesPath(exception)) {
+        this._log.info(`Skipping ${documentInfo.title} because it matches the exception ${exception}`)
+        return
+      }
+    }
+
     Handlebars.registerHelper('moment', (text, format) => {
       return moment(text).format(format)
     })

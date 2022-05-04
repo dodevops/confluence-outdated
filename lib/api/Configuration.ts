@@ -57,7 +57,12 @@ export class Configuration {
   /**
    * A list of checks for outdated documents
    */
-  public checks: Array<Check>
+  public checks: Array<Check> = []
+
+  /**
+   * An array of regular expressions for document paths that should not be notified
+   */
+  public exceptions: Array<RegExp> = []
 
   /**
    * A list of page maintainers
@@ -89,7 +94,6 @@ export class Configuration {
     this.confluenceUser = confluenceUser
     this.confluencePassword = confluencePassword
     this.configurationDocumentId = configurationDocumentId
-    this.checks = []
     this._loaded = false
 
     this._log = log.getLogger('Configuration')
@@ -171,6 +175,10 @@ export class Configuration {
           maintainer: value.maintainer,
         }
       })
+
+      // Load exceptions
+
+      this.exceptions = this._getConfigurationFromPanel($, 'Exceptions').map<RegExp>((value) => new RegExp(value.regularexpression))
 
       this.notificationSubjectTemplate = $(
         'ac\\:parameter:contains("Notification Template") + ac\\:rich-text-body ac\\:parameter:contains("Subject") + ac\\:rich-text-body'
