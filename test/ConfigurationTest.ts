@@ -28,4 +28,13 @@ describe('The Configuration API', (): void => {
 
     chai.expect(configuration.notificationFrom).to.eq('Notification <noreply@example.com>')
   })
+  it('supports empty exclusion lines', async (): Promise<void> => {
+    const mockServer = new MockServer('https://example.com')
+    mockServer.addConfigurationDocumentEndpoint()
+
+    const configuration = new Configuration('https://example.com', 'nobody', 'nothing', '12346')
+    await configuration.load()
+
+    chai.expect(configuration.exceptions).to.have.lengthOf(0)
+  })
 })

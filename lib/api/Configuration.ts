@@ -178,7 +178,9 @@ export class Configuration {
 
       // Load exceptions
 
-      this.exceptions = this._getConfigurationFromPanel($, 'Exceptions').map<RegExp>((value) => new RegExp(value.regularexpression))
+      this.exceptions = this._getConfigurationFromPanel($, 'Exceptions')
+        .filter((value) => value.regularexpression !== '')
+        .map<RegExp>((value) => new RegExp(value.regularexpression))
 
       this.notificationSubjectTemplate = $(
         'ac\\:parameter:contains("Notification Template") + ac\\:rich-text-body ac\\:parameter:contains("Subject") + ac\\:rich-text-body'
