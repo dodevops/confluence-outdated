@@ -5,6 +5,6 @@ COPY . /usr/src/app
 WORKDIR /usr/src/app
 
 RUN npm install && \
-    npx grunt build
+    npx grunt test
 
 ENTRYPOINT ["node", "index.js"]
