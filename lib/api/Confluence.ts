@@ -68,7 +68,7 @@ export class Confluence {
    */
   public async getDocumentInfo(documentId: number): Promise<DocumentInfo> {
     this._log.debug(`Getting document information of document ${documentId}`)
-    const documentUrl = `${this.confluenceUrl}/rest/api/content/${documentId}?expand=ancestors`
+    const documentUrl = `${this.confluenceUrl}/rest/api/content/${documentId}?expand=ancestors,version`
     const document = await got(documentUrl, {
       username: this.confluenceUser,
       password: this.confluencePassword,

@@ -197,7 +197,7 @@ export class MockServer {
 
   public addDocumentEndpoint(): void {
     this._scope
-      .get('/rest/api/content/123?expand=ancestors')
+      .get('/rest/api/content/123?expand=ancestors,version')
       .basicAuth({
         user: 'nobody',
         pass: 'nothing',
@@ -221,7 +221,7 @@ export class MockServer {
         },
         title: 'Test',
       })
-      .get('/rest/api/content/234?expand=ancestors')
+      .get('/rest/api/content/234?expand=ancestors,version')
       .basicAuth({
         user: 'nobody',
         pass: 'nothing',
