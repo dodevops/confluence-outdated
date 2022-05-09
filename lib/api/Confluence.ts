@@ -118,7 +118,7 @@ export class Confluence {
       throw new ConfluenceError(`Document ${documentId} has no URL}`)
     }
 
-    const path = document.ancestors.reverse().map((ancestor) => ancestor.title)
+    const path = document.ancestors.map((ancestor) => ancestor.title)
 
     const documentInfo = new DocumentInfo(documentId, author, lastVersionDate, lastVersionMessage, title, path, url)
 
