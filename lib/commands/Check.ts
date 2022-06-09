@@ -60,9 +60,7 @@ export default class extends Command {
       }
       const checkedDocuments = await confluence.findDocumentsOlderThan(filter, check.maxAge)
 
-      for (const checkedDocument of checkedDocuments) {
-        await notification.notify(checkedDocument)
-      }
+      await notification.notify(checkedDocuments)
     }
   }
 }

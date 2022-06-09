@@ -3,18 +3,16 @@ import nock = require('nock')
 export class MockServer {
   private _scope: nock.Scope
 
-  public static readonly NOTIFICATION_SUBJECT = 'Document outdated: {{title}}'
-  public static readonly NOTIFICATION_BODY = `<p>Hello {{author}}!</p>
-                <p><br></p>
-                <p>The document</p>
-                <p>{{title}}</p>
-                <p><br></p>
-                <p>was last changed at {{lastVersionDate}}.</p>
-                <p>{{#if lastVersionMessage}}</p>
-                <p>The comment for the change was: {{lastVersionMessage}}</p>
-                <p>{{/if}}</p>
-                <p><br></p>
-                <p>You can find the document here: {{url}}</p>
+  public static readonly NOTIFICATION_SUBJECT = `[CONFLUENCE-OUTDATED] {{ documentsCount }} document{{#if multipleDocuments}}s{{/if}} outdated`
+  public static readonly NOTIFICATION_BODY = `<p>Greetings {{author}},</p>
+                <p>The following document{{#if multipleDocuments}}s{{/if}} are outdated:</p>
+                <ul>
+                  {{#each documents}}
+                  <li><a href="{{url}}">{{title}}</a> ({{lastVersionDate}}) ({{lastVersionMessage}})</li>
+                  {{/each}}
+                </ul>
+                <p>Please check, wether the document needs any updates or save the document again stating that it is still valid.</p>
+                <p>Cheers, confluence-outdated</p>
   `
 
   constructor(basePath: string) {

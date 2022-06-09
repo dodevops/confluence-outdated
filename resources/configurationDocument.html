@@ -97,21 +97,21 @@
         <ac:structured-macro ac:name="panel" ac:schema-version="1" ac:macro-id="f8503e48-c671-4ed6-897c-def2b2c3fa29">
             <ac:parameter ac:name="title">Subject</ac:parameter>
             <ac:rich-text-body>
-                <p>Dokument outdated: {{title}}</p></ac:rich-text-body>
+                <p>[CONFLUENCE-OUTDATED] {{ documentsCount }} document{{#if multipleDocuments}}s{{/if}} outdated</p></ac:rich-text-body>
         </ac:structured-macro>
         <ac:structured-macro ac:name="panel" ac:schema-version="1" ac:macro-id="63c16112-dea3-434e-b1cb-467ff4e36d5f">
             <ac:parameter ac:name="title">Body</ac:parameter>
             <ac:rich-text-body>
                 <p>Greetings {{author}},</p>
-                <p>The most recent change of the document</p>
-                <p>{{title}}</p>
-                <p>was at {{lastVersionDate}}.</p>
-                <p>{{#if lastVersionMessage}}</p>
-                <p>The edit comment used was: {{lastVersionMessage}}</p>
-                <p>{{/if}}</p>
-                <p>You can find the document here: {{url}}</p>
+                <p>The following document{{#if multipleDocuments}}s{{/if}} are outdated:</p>
+                <ul>
+                    {{#each documents}}
+                    <li><a href="{{url}}">{{title}}</a> ({{lastVersionDate}}) ({{lastVersionMessage}})</li>
+                    {{/each}}
+                </ul>
                 <p>Please check, wether the document needs any updates or save the document again stating that it is still valid.</p>
-                <p>Cheers, confluence-outdated</p></ac:rich-text-body>
+                <p>Cheers, confluence-outdated</p>
+            </ac:rich-text-body>
         </ac:structured-macro>
     </ac:rich-text-body>
 </ac:structured-macro>
