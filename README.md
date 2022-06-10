@@ -62,8 +62,12 @@ excluded from notifications.
 This panel includes two child panels which hold [Handlebars](https://handlebarsjs.com/guide/) templates for the
 subject and the body of the notification mails.
 
-They will get [this object](https://github.com/dodevops/confluence-outdated/blob/master/lib/api/DocumentInfo.ts#L6) as
-a context for the template.
+They will be provided with the following context:
+
+* author: E-Mail address of the recipient
+* documentsCount: The number of documents that are outdated for this recipient
+* multipleDocuments: A boolean whether there are multiple documents or just one
+* documents: An array of [this object](https://github.com/dodevops/confluence-outdated/blob/master/lib/api/DocumentInfo.ts#L6)
 
 ## Usage
 

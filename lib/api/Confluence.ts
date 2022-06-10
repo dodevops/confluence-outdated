@@ -120,7 +120,7 @@ export class Confluence {
 
     const path = document.ancestors.map((ancestor) => ancestor.title)
 
-    const documentInfo = new DocumentInfo(documentId, author, lastVersionDate, lastVersionMessage, title, path, url)
+    const documentInfo = new DocumentInfo(documentId, author, lastVersionDate, lastVersionMessage, title, path, url, document._links.webui)
 
     return documentInfo
   }

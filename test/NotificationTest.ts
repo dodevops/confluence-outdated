@@ -32,7 +32,7 @@ describe('The Notification API', (): void => {
 
   it('should send notifications', async (): Promise<void> => {
     const notification = new Notification(configuration, '', confluence, transportStub)
-    const documentInfo = new DocumentInfo(0, 'author', moment(), 'message', 'title', ['main'], 'http://example.com')
+    const documentInfo = new DocumentInfo(0, 'author', moment(), 'message', 'title', ['main'], 'http://example.com', 'test')
     await notification.notify([documentInfo])
     chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledOnce).to.be.true
     chai.expect(
@@ -40,11 +40,13 @@ describe('The Notification API', (): void => {
         from: 'Notification <noreply@example.com>',
         to: 'author@example.com',
         subject: Handlebars.compile(MockServer.NOTIFICATION_SUBJECT)({
+          author: 'author@example.com',
           documentsCount: 1,
           documents: [documentInfo],
           multipleDocuments: false,
         }),
         html: Handlebars.compile(MockServer.NOTIFICATION_BODY)({
+          author: 'author@example.com',
           documentsCount: 1,
           documents: [documentInfo],
           multipleDocuments: false,
@@ -54,7 +56,7 @@ describe('The Notification API', (): void => {
   })
   it('should use a maintainer when configured', async (): Promise<void> => {
     const notification = new Notification(configuration, '', confluence, transportStub)
-    const documentInfo = new DocumentInfo(0, 'author2', moment(), 'message', 'Test2', ['main', 'Test'], 'http://example.com')
+    const documentInfo = new DocumentInfo(0, 'author2', moment(), 'message', 'Test2', ['main', 'Test'], 'http://example.com', 'test')
     await notification.notify([documentInfo])
     chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledTwice).to.be.true
     chai.expect(
@@ -62,11 +64,13 @@ describe('The Notification API', (): void => {
         from: 'Notification <noreply@example.com>',
         to: 'maintainer@example.com',
         subject: Handlebars.compile(MockServer.NOTIFICATION_SUBJECT)({
+          author: 'maintainer@example.com',
           documentsCount: 1,
           documents: [documentInfo],
           multipleDocuments: false,
         }),
         html: Handlebars.compile(MockServer.NOTIFICATION_BODY)({
+          author: 'maintainer@example.com',
           documentsCount: 1,
           documents: [documentInfo],
           multipleDocuments: false,
@@ -78,11 +82,13 @@ describe('The Notification API', (): void => {
         from: 'Notification <noreply@example.com>',
         to: 'author2@example.com',
         subject: Handlebars.compile(MockServer.NOTIFICATION_SUBJECT)({
+          author: 'author2@example.com',
           documentsCount: 1,
           documents: [documentInfo],
           multipleDocuments: false,
         }),
         html: Handlebars.compile(MockServer.NOTIFICATION_BODY)({
+          author: 'author2@example.com',
           documentsCount: 1,
           documents: [documentInfo],
           multipleDocuments: false,
@@ -92,21 +98,21 @@ describe('The Notification API', (): void => {
   })
   it('should not send notifications on a dry run', async (): Promise<void> => {
     const notification = new Notification(configuration, '', confluence, transportStub, true)
-    const documentInfo = new DocumentInfo(0, 'author', moment(), 'message', 'title', ['main'], 'http://example.com')
+    const documentInfo = new DocumentInfo(0, 'author', moment(), 'message', 'title', ['main'], 'http://example.com', 'test')
     await notification.notify([documentInfo])
     chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.notCalled).to.be.true
   })
   it('should not send notifications for an excluded document', async (): Promise<void> => {
     const notification = new Notification(configuration, '', confluence, transportStub)
-    const documentInfo = new DocumentInfo(0, 'author2', moment(), 'message', 'NOT', ['main', 'Test'], 'http://example.com')
+    const documentInfo = new DocumentInfo(0, 'author2', moment(), 'message', 'NOT', ['main', 'Test'], 'http://example.com', 'test')
     await notification.notify([documentInfo])
     chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledOnce).to.be.false
   })
 
   it('should send notifications in a batch if configured', async (): Promise<void> => {
     const notification = new Notification(configuration, '', confluence, transportStub)
-    const documentInfo = new DocumentInfo(0, 'author', moment(), 'message', 'title1', ['main'], 'http://example.com')
-    const documentInfo2 = new DocumentInfo(0, 'author', moment(), 'message', 'title2', ['main'], 'http://example.com')
+    const documentInfo = new DocumentInfo(0, 'author', moment(), 'message', 'title1', ['main'], 'http://example.com', 'test')
+    const documentInfo2 = new DocumentInfo(0, 'author', moment(), 'message', 'title2', ['main'], 'http://example.com', 'test')
     await notification.notify([documentInfo, documentInfo2])
     chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledOnce).to.be.true
     chai.expect(
@@ -114,11 +120,13 @@ describe('The Notification API', (): void => {
         from: 'Notification <noreply@example.com>',
         to: 'author@example.com',
         subject: Handlebars.compile(MockServer.NOTIFICATION_SUBJECT)({
+          author: 'author@example.com',
           documentsCount: 2,
           documents: [documentInfo, documentInfo2],
           multipleDocuments: true,
         }),
         html: Handlebars.compile(MockServer.NOTIFICATION_BODY)({
+          author: 'author@example.com',
           documentsCount: 2,
           documents: [documentInfo, documentInfo2],
           multipleDocuments: true,

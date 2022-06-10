@@ -68,11 +68,13 @@ export class Notification {
         from: this._configuration.notificationFrom,
         to: recipient,
         subject: subjectTemplate({
+          author: recipient,
           documentsCount: this._notificationBatch[recipient].length,
           multipleDocuments: this._notificationBatch[recipient].length > 1,
           documents: this._notificationBatch[recipient],
         }),
         html: bodyTemplate({
+          author: recipient,
           documentsCount: this._notificationBatch[recipient].length,
           multipleDocuments: this._notificationBatch[recipient].length > 1,
           documents: this._notificationBatch[recipient],

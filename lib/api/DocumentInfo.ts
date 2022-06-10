@@ -48,6 +48,7 @@ export class DocumentInfo implements DocumentInfo {
   public title: string
   public path: Array<string>
   public url: string
+  public shortUrl: string
 
   constructor(
     id: number,
@@ -56,7 +57,8 @@ export class DocumentInfo implements DocumentInfo {
     lastVersionMessage: string,
     title: string,
     path: Array<string>,
-    url: string
+    url: string,
+    shortUrl: string
   ) {
     this.id = id
     this.author = author
@@ -65,6 +67,7 @@ export class DocumentInfo implements DocumentInfo {
     this.title = title
     this.path = path
     this.url = url
+    this.shortUrl = shortUrl
   }
 
   public matchesPath(regexp: RegExp): boolean {
