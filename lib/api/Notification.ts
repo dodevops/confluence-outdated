@@ -59,7 +59,9 @@ export class Notification {
           this._notificationBatch[recipient] = []
         }
 
-        this._notificationBatch[recipient].push(documentInfo)
+        if (!this._notificationBatch[recipient].some((docInfo) => docInfo === documentInfo)) {
+          this._notificationBatch[recipient].push(documentInfo)
+        }
       }
     }
 

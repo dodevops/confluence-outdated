@@ -134,4 +134,28 @@ describe('The Notification API', (): void => {
       })
     ).to.be.true
   })
+  it('should not send both documents when the maintainer is the author', async (): Promise<void> => {
+    const notification = new Notification(configuration, '', confluence, transportStub)
+    const documentInfo = new DocumentInfo(0, 'maintainer', moment(), 'message', 'Test2', ['main', 'Test'], 'http://example.com', 'test')
+    await notification.notify([documentInfo])
+    chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledOnce).to.be.true
+    chai.expect(
+      (transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledWith({
+        from: 'Notification <noreply@example.com>',
+        to: 'maintainer@example.com',
+        subject: Handlebars.compile(MockServer.NOTIFICATION_SUBJECT)({
+          author: 'maintainer@example.com',
+          documentsCount: 1,
+          documents: [documentInfo],
+          multipleDocuments: false,
+        }),
+        html: Handlebars.compile(MockServer.NOTIFICATION_BODY)({
+          author: 'maintainer@example.com',
+          documentsCount: 1,
+          documents: [documentInfo],
+          multipleDocuments: false,
+        }),
+      })
+    ).to.be.true
+  })
 })
