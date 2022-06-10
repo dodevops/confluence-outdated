@@ -52,15 +52,17 @@ export default class extends Command {
 
     const notification = new Notification(configuration, options.smtpTransportUrl, confluence, null, options.dryRun)
 
+    const checkedDocuments = []
+
     for (const check of configuration.checks) {
       log.debug(`Checking for documents older than ${check.maxAge} day(s) with label(s) ${check.labels.join(',')}`)
       let filter = `label = ${check.labels.join('AND label = ')}`
       if (configuration.space && configuration.space != '') {
         filter = `${filter} AND space = ${configuration.space}`
       }
-      const checkedDocuments = await confluence.findDocumentsOlderThan(filter, check.maxAge)
-
-      await notification.notify(checkedDocuments)
+      checkedDocuments.push(...(await confluence.findDocumentsOlderThan(filter, check.maxAge)))
     }
+
+    await notification.notify(checkedDocuments)
   }
 }
