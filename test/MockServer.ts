@@ -140,6 +140,26 @@ export class MockServer {
         </table>
     </ac:rich-text-body>
 </ac:structured-macro>
+<ac:structured-macro ac:name="panel" ac:schema-version="1" ac:macro-id="1d192d60-7e69-4af8-8dd6-4006a7bfc952">
+    <ac:parameter ac:name="title">Excluded labels</ac:parameter>
+    <ac:rich-text-body>
+        <i>This table holds a list of labels. A document which has one of these will be excluded from notifications.</i>
+        <table class="wrapped">
+            <colgroup>
+                <col/>
+                <col/>
+            </colgroup>
+            <tbody>
+            <tr>
+                <th>Label</th>
+            </tr>
+            <tr>
+                <td>NOT</td>
+            </tr>
+            </tbody>
+        </table>
+    </ac:rich-text-body>
+</ac:structured-macro>
 <ac:structured-macro ac:name='panel' ac:schema-version='1' ac:macro-id='93f1d981-c841-4cb4-b6e2-5940dfe69132'>
     <ac:parameter ac:name='title'>Notification Template</ac:parameter>
     <ac:rich-text-body>
@@ -332,7 +352,7 @@ export class MockServer {
 
   public addDocumentEndpoint(): void {
     this._scope
-      .get('/rest/api/content/123?expand=ancestors,version')
+      .get('/rest/api/content/123?expand=ancestors,version,metadata.labels')
       .basicAuth({
         user: 'nobody',
         pass: 'nothing',
@@ -355,8 +375,19 @@ export class MockServer {
           message: 'Some change',
         },
         title: 'Test',
+        metadata: {
+          labels: {
+            results: [
+              {
+                prefix: 'global',
+                name: 'Test',
+                id: '90734603',
+              },
+            ],
+          },
+        },
       })
-      .get('/rest/api/content/234?expand=ancestors,version')
+      .get('/rest/api/content/234?expand=ancestors,version,metadata.labels')
       .basicAuth({
         user: 'nobody',
         pass: 'nothing',

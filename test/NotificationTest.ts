@@ -32,7 +32,7 @@ describe('The Notification API', (): void => {
 
   it('should send notifications', async (): Promise<void> => {
     const notification = new Notification(configuration, '', confluence, transportStub)
-    const documentInfo = new DocumentInfo(0, 'author', moment(), 'message', 'title', ['main'], 'http://example.com', 'test')
+    const documentInfo = new DocumentInfo(0, 'author', moment(), 'message', 'title', ['main'], 'http://example.com', 'test', [])
     await notification.notify([documentInfo])
     chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledOnce).to.be.true
     const expectedSubject = Handlebars.compile(MockServer.NOTIFICATION_SUBJECT)({
@@ -58,7 +58,7 @@ describe('The Notification API', (): void => {
   })
   it('should use a maintainer when configured', async (): Promise<void> => {
     const notification = new Notification(configuration, '', confluence, transportStub)
-    const documentInfo = new DocumentInfo(0, 'author2', moment(), 'message', 'Test2', ['main', 'Test'], 'http://example.com', 'test')
+    const documentInfo = new DocumentInfo(0, 'author2', moment(), 'message', 'Test2', ['main', 'Test'], 'http://example.com', 'test', [])
     await notification.notify([documentInfo])
     chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledTwice).to.be.true
     chai.expect(
@@ -100,21 +100,21 @@ describe('The Notification API', (): void => {
   })
   it('should not send notifications on a dry run', async (): Promise<void> => {
     const notification = new Notification(configuration, '', confluence, transportStub, true)
-    const documentInfo = new DocumentInfo(0, 'author', moment(), 'message', 'title', ['main'], 'http://example.com', 'test')
+    const documentInfo = new DocumentInfo(0, 'author', moment(), 'message', 'title', ['main'], 'http://example.com', 'test', [])
     await notification.notify([documentInfo])
     chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.notCalled).to.be.true
   })
   it('should not send notifications for an excluded document', async (): Promise<void> => {
     const notification = new Notification(configuration, '', confluence, transportStub)
-    const documentInfo = new DocumentInfo(0, 'author2', moment(), 'message', 'NOT', ['main', 'Test'], 'http://example.com', 'test')
+    const documentInfo = new DocumentInfo(0, 'author2', moment(), 'message', 'NOT', ['main', 'Test'], 'http://example.com', 'test', [])
     await notification.notify([documentInfo])
     chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledOnce).to.be.false
   })
 
   it('should send notifications in a batch if configured', async (): Promise<void> => {
     const notification = new Notification(configuration, '', confluence, transportStub)
-    const documentInfo = new DocumentInfo(0, 'author', moment(), 'message', 'title1', ['main'], 'http://example.com', 'test')
-    const documentInfo2 = new DocumentInfo(0, 'author', moment(), 'message', 'title2', ['main'], 'http://example.com', 'test')
+    const documentInfo = new DocumentInfo(0, 'author', moment(), 'message', 'title1', ['main'], 'http://example.com', 'test', [])
+    const documentInfo2 = new DocumentInfo(0, 'author', moment(), 'message', 'title2', ['main'], 'http://example.com', 'test', [])
     await notification.notify([documentInfo, documentInfo2])
     chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledOnce).to.be.true
     chai.expect(
@@ -138,7 +138,7 @@ describe('The Notification API', (): void => {
   })
   it('should not send both documents when the maintainer is the author', async (): Promise<void> => {
     const notification = new Notification(configuration, '', confluence, transportStub)
-    const documentInfo = new DocumentInfo(0, 'maintainer', moment(), 'message', 'Test2', ['main', 'Test'], 'http://example.com', 'test')
+    const documentInfo = new DocumentInfo(0, 'maintainer', moment(), 'message', 'Test2', ['main', 'Test'], 'http://example.com', 'test', [])
     await notification.notify([documentInfo])
     chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledOnce).to.be.true
     chai.expect(
@@ -159,5 +159,12 @@ describe('The Notification API', (): void => {
         }),
       })
     ).to.be.true
+  })
+
+  it('should not send notifications for a document excluded by label', async (): Promise<void> => {
+    const notification = new Notification(configuration, '', confluence, transportStub)
+    const documentInfo = new DocumentInfo(0, 'author2', moment(), 'message', 'Title', ['main'], 'http://example.com', 'test', ['not'])
+    await notification.notify([documentInfo])
+    chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledOnce).to.be.false
   })
 })

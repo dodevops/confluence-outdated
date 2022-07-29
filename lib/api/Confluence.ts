@@ -68,7 +68,7 @@ export class Confluence {
    */
   public async getDocumentInfo(documentId: number): Promise<DocumentInfo> {
     this._log.debug(`Getting document information of document ${documentId}`)
-    const documentUrl = `${this.confluenceUrl}/rest/api/content/${documentId}?expand=ancestors,version`
+    const documentUrl = `${this.confluenceUrl}/rest/api/content/${documentId}?expand=ancestors,version,metadata.labels`
     const document = await got(documentUrl, {
       username: this.confluenceUser,
       password: this.confluencePassword,
@@ -120,7 +120,19 @@ export class Confluence {
 
     const path = document.ancestors.map((ancestor) => ancestor.title)
 
-    const documentInfo = new DocumentInfo(documentId, author, lastVersionDate, lastVersionMessage, title, path, url, document._links.webui)
+    const labels = document.metadata?.labels?.results?.map((label) => label.name) ?? []
+
+    const documentInfo = new DocumentInfo(
+      documentId,
+      author,
+      lastVersionDate,
+      lastVersionMessage,
+      title,
+      path,
+      url,
+      document._links.webui,
+      labels
+    )
 
     return documentInfo
   }

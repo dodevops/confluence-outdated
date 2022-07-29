@@ -41,6 +41,13 @@ export class Notification {
         }
       }
 
+      for (const excludedLabel of this._configuration.excludedLabels) {
+        if (documentInfo.labels.some((label) => label.toLowerCase() == excludedLabel.toLowerCase())) {
+          this._log.info(`Skipping ${documentInfo.title} because it has the excluded label ${excludedLabel}`)
+          return
+        }
+      }
+
       documentInfo.lastVersionDate = (documentInfo.lastVersionDate as Moment).toISOString() as string
 
       for (const maintainer of this._configuration.maintainer) {

@@ -29,6 +29,8 @@ describe('The Confluence API', (): void => {
     chai.expect((results[1].lastVersionDate as Moment).toISOString()).to.eq('2020-01-31T22:00:00.000Z')
     chai.expect(results[1].lastVersionMessage).to.eq('')
     chai.expect(results[1].title).to.eq('Test2')
+    chai.expect(results[0].labels.length).to.eq(1)
+    chai.expect(results[0].labels[0]).to.eq('Test')
   })
 
   it('should add a configuration document', async (): Promise<void> => {

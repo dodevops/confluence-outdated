@@ -65,6 +65,11 @@ export class Configuration {
   public exceptions: Array<RegExp> = []
 
   /**
+   * An array of labels of documents that should not be notified
+   */
+  public excludedLabels: Array<string> = []
+
+  /**
    * A list of page maintainers
    */
   public maintainer: Array<Maintainer>
@@ -181,6 +186,12 @@ export class Configuration {
       this.exceptions = this._getConfigurationFromPanel($, 'Exceptions')
         .filter((value) => value.regularexpression !== '')
         .map<RegExp>((value) => new RegExp(value.regularexpression))
+
+      // Load excluded labels
+
+      this.excludedLabels = this._getConfigurationFromPanel($, 'Excluded labels')
+        .filter((value) => value.label !== '')
+        .map<string>((value) => value.label)
 
       this.notificationSubjectTemplate = $(
         'ac\\:parameter:contains("Notification Template") + ac\\:rich-text-body ac\\:parameter:contains("Subject") + ac\\:rich-text-body'

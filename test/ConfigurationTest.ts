@@ -22,6 +22,7 @@ describe('The Configuration API', (): void => {
     chai.expect(configuration.maintainer).to.have.lengthOf(1)
 
     chai.expect(configuration.exceptions).to.have.lengthOf(1)
+    chai.expect(configuration.excludedLabels).to.have.lengthOf(1)
 
     chai.expect(configuration.notificationBodyTemplate).to.eq(MockServer.NOTIFICATION_BODY)
     chai.expect(configuration.notificationSubjectTemplate).to.eq(MockServer.NOTIFICATION_SUBJECT)
