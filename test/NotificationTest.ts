@@ -35,22 +35,24 @@ describe('The Notification API', (): void => {
     const documentInfo = new DocumentInfo(0, 'author', moment(), 'message', 'title', ['main'], 'http://example.com', 'test')
     await notification.notify([documentInfo])
     chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledOnce).to.be.true
+    const expectedSubject = Handlebars.compile(MockServer.NOTIFICATION_SUBJECT)({
+      author: 'author@example.com',
+      documentsCount: 1,
+      documents: [documentInfo],
+      multipleDocuments: false,
+    })
+    const expectedBody = Handlebars.compile(MockServer.NOTIFICATION_BODY)({
+      author: 'author@example.com',
+      documentsCount: 1,
+      documents: [documentInfo],
+      multipleDocuments: false,
+    })
     chai.expect(
       (transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledWith({
         from: 'Notification <noreply@example.com>',
         to: 'author@example.com',
-        subject: Handlebars.compile(MockServer.NOTIFICATION_SUBJECT)({
-          author: 'author@example.com',
-          documentsCount: 1,
-          documents: [documentInfo],
-          multipleDocuments: false,
-        }),
-        html: Handlebars.compile(MockServer.NOTIFICATION_BODY)({
-          author: 'author@example.com',
-          documentsCount: 1,
-          documents: [documentInfo],
-          multipleDocuments: false,
-        }),
+        subject: expectedSubject,
+        html: expectedBody,
       })
     ).to.be.true
   })
