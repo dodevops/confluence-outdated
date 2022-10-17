@@ -117,7 +117,7 @@ export class Configuration {
         if (lowerCase) {
           configurationKey = configurationKey.toLowerCase()
         }
-        rowObject[configurationKey] = $(values[index + i * 2]).text()
+        rowObject[configurationKey] = $(values[index + i * keys.length]).text()
       })
       returnObject.push(rowObject)
     }
