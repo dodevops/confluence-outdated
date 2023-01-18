@@ -33,18 +33,18 @@ export class Notification {
     const subjectTemplate = Handlebars.compile(this._configuration.notificationSubjectTemplate)
     const bodyTemplate = Handlebars.compile(this._configuration.notificationBodyTemplate)
 
-    for (const documentInfo of documentInfos) {
+    process: for (const documentInfo of documentInfos) {
       for (const exception of this._configuration.exceptions) {
         if (documentInfo.matchesPath(exception)) {
           this._log.info(`Skipping ${documentInfo.title} because it matches the exception ${exception}`)
-          return
+          continue process
         }
       }
 
       for (const excludedLabel of this._configuration.excludedLabels) {
         if (documentInfo.labels.some((label) => label.toLowerCase() == excludedLabel.toLowerCase())) {
           this._log.info(`Skipping ${documentInfo.title} because it has the excluded label ${excludedLabel}`)
-          return
+          continue process
         }
       }
 

@@ -164,7 +164,9 @@ describe('The Notification API', (): void => {
   it('should not send notifications for a document excluded by label', async (): Promise<void> => {
     const notification = new Notification(configuration, '', confluence, transportStub)
     const documentInfo = new DocumentInfo(0, 'author2', moment(), 'message', 'Title', ['main'], 'http://example.com', 'test', ['not'])
-    await notification.notify([documentInfo])
-    chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledOnce).to.be.false
+    const documentInfoValid = new DocumentInfo(0, 'author2', moment(), 'message', 'Title', ['main'], 'http://example.com', 'test', [])
+    await notification.notify([documentInfo, documentInfoValid])
+    chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledOnce).to.be.true
+    chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledTwice).to.be.false
   })
 })
