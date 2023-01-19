@@ -126,7 +126,7 @@
                 <p>The following document{{#if multipleDocuments}}s{{/if}} are outdated:</p>
                 <ul>
                     {{#each documents}}
-                    <li><a href="{{url}}">{{title}}</a> ({{lastVersionDate}}) ({{author}} - {{lastVersionMessage}})</li>
+                    <li><a href="{{url}}">{{title}}</a> ({{lastVersionDate}}) ({{author}} - {{lastVersionMessage}}) [notified: {{ getRecipients this }}]</li>
                     {{/each}}
                 </ul>
                 <p>Please check, wether the document needs any updates or save the document again stating that it is still valid.</p>
