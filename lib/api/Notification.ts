@@ -6,7 +6,6 @@ import { DocumentInfo } from './DocumentInfo'
 import * as Handlebars from 'handlebars'
 import { Logger } from 'loglevel'
 import log = require('loglevel')
-import moment = require('moment')
 
 export class Notification {
   private _configuration: Configuration
@@ -23,6 +22,9 @@ export class Notification {
 
     this._log = log.getLogger('Notification')
     this._dryRun = dryRun
+    Handlebars.registerHelper('getRecipients', (documentInfo: DocumentInfo) => {
+      return documentInfo.getRecipients(this._configuration.maintainer, this._configuration.domain).join(', ')
+    })
   }
 
   public async notify(documentInfos: Array<DocumentInfo>): Promise<void> {
@@ -30,9 +32,7 @@ export class Notification {
     documentInfos.forEach((entry) => {
       workingDocumentInfos.push(DocumentInfo.fromDocumentInfo(entry))
     })
-    Handlebars.registerHelper('moment', (text, format) => {
-      return moment(text).format(format)
-    })
+
     const subjectTemplate = Handlebars.compile(this._configuration.notificationSubjectTemplate)
     const bodyTemplate = Handlebars.compile(this._configuration.notificationBodyTemplate)
 
