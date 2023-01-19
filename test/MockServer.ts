@@ -114,10 +114,6 @@ export class MockServer {
                 <th>Pagepattern</th>
                 <th>Maintainer</th>
             </tr>
-            <tr>
-                <td>main/Test/.*</td>
-                <td>maintainer,_lastauthor</td>
-            </tr>
             </tbody>
         </table>
     </ac:rich-text-body>
@@ -274,6 +270,139 @@ export class MockServer {
                 <th>Pagepattern</th>
                 <th>Maintainer</th>
             </tr>
+            </tbody>
+        </table>
+    </ac:rich-text-body>
+</ac:structured-macro>
+<ac:structured-macro ac:name='panel' ac:schema-version='1' ac:macro-id='1d192d60-7e69-4af8-8dd6-4006a7bfc952'>
+    <ac:parameter ac:name='title'>Exceptions</ac:parameter>
+    <ac:rich-text-body>
+        <table class='wrapped'>
+            <colgroup>
+                <col/>
+            </colgroup>
+            <tbody>
+            <tr>
+                <th>RegularExpression</th>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </ac:rich-text-body>
+</ac:structured-macro>
+<ac:structured-macro ac:name='panel' ac:schema-version='1' ac:macro-id='93f1d981-c841-4cb4-b6e2-5940dfe69132'>
+    <ac:parameter ac:name='title'>Notification Template</ac:parameter>
+    <ac:rich-text-body>
+        <ac:structured-macro ac:name='panel' ac:schema-version='1' ac:macro-id='f8503e48-c671-4ed6-897c-def2b2c3fa29'>
+            <ac:parameter ac:name='title'>Subject</ac:parameter>
+            <ac:rich-text-body><p>${MockServer.NOTIFICATION_SUBJECT}</p></ac:rich-text-body>
+        </ac:structured-macro>
+        <ac:structured-macro ac:name='panel' ac:schema-version='1' ac:macro-id='63c16112-dea3-434e-b1cb-467ff4e36d5f'>
+            <ac:parameter ac:name='title'>Body</ac:parameter>
+            <ac:rich-text-body>${MockServer.NOTIFICATION_BODY}</ac:rich-text-body>
+        </ac:structured-macro>
+    </ac:rich-text-body>
+</ac:structured-macro>
+          `,
+          },
+        },
+      })
+    this._scope
+      .get('/rest/api/content/12347?expand=body.storage')
+      .basicAuth({
+        user: 'nobody',
+        pass: 'nothing',
+      })
+      .reply(200, {
+        body: {
+          storage: {
+            value: `
+          <ac:structured-macro ac:name='panel' ac:schema-version='1' ac:macro-id='4671afbe-d914-470a-bb9e-8b7321f60f79'>
+    <ac:parameter ac:name='title'>Configuration</ac:parameter>
+    <ac:rich-text-body>
+        <table class='wrapped'>
+            <colgroup>
+                <col/>
+                <col/>
+            </colgroup>
+            <tbody>
+            <tr>
+                <th>Space</th>
+                <td>SAMPLE</td>
+            </tr>
+            <tr>
+                <th>Domain</th>
+                <td>example.com</td>
+            </tr>
+            <tr>
+                <th>NotificationFrom</th>
+                <td>Notification &lt;noreply@example.com&gt;</td>
+            </tr>
+            </tbody>
+        </table>
+    </ac:rich-text-body>
+</ac:structured-macro>
+<ac:structured-macro ac:name='panel' ac:schema-version='1' ac:macro-id='ecfe796e-b701-4f30-a74a-b94dbb33daff'>
+    <ac:parameter ac:name='title'>SMTP</ac:parameter>
+    <ac:rich-text-body>
+        <table>
+            <colgroup>
+                <col/>
+                <col/>
+            </colgroup>
+            <tbody>
+            <tr>
+                <th>Host</th>
+                <td colspan='1'>localhost</td>
+            </tr>
+            <tr>
+                <th>Port</th>
+                <td colspan='1'>25</td>
+            </tr>
+            </tbody>
+        </table>
+    </ac:rich-text-body>
+</ac:structured-macro>
+<ac:structured-macro ac:name='panel' ac:schema-version='1' ac:macro-id='f19cd8b2-57e0-4c68-a823-8a2daee08c12'>
+    <ac:parameter ac:name='title'>Checks</ac:parameter>
+    <ac:rich-text-body>
+        <table class='wrapped'>
+            <colgroup>
+                <col/>
+                <col/>
+            </colgroup>
+            <tbody>
+            <tr>
+                <th>Labels</th>
+                <th>MaxAge</th>
+            </tr>
+            <tr>
+                <td>test1</td>
+                <td>356</td>
+            </tr>
+            <tr>
+                <td colspan='1'>test2</td>
+                <td colspan='1'>1234</td>
+            </tr>
+            </tbody>
+        </table>
+    </ac:rich-text-body>
+</ac:structured-macro>
+<ac:structured-macro ac:name='panel' ac:schema-version='1' ac:macro-id='1d192d60-7e69-4af8-8dd6-4006a7bfc952'>
+    <ac:parameter ac:name='title'>Maintainer</ac:parameter>
+    <ac:rich-text-body>
+        <table class='wrapped'>
+            <colgroup>
+                <col/>
+                <col/>
+            </colgroup>
+            <tbody>
+            <tr>
+                <th>Pagepattern</th>
+                <th>Maintainer</th>
+            </tr>
             <tr>
                 <td>main/Test/.*</td>
                 <td>maintainer,_lastauthor</td>
@@ -294,7 +423,30 @@ export class MockServer {
                 <th>RegularExpression</th>
             </tr>
             <tr>
-                <td></td>
+                <td>main/Test/NOT</td>
+            </tr>
+            </tbody>
+        </table>
+    </ac:rich-text-body>
+</ac:structured-macro>
+<ac:structured-macro ac:name="panel" ac:schema-version="1" ac:macro-id="1d192d60-7e69-4af8-8dd6-4006a7bfc952">
+    <ac:parameter ac:name="title">Excluded labels</ac:parameter>
+    <ac:rich-text-body>
+        <i>This table holds a list of labels. A document which has one of these will be excluded from notifications.</i>
+        <table class="wrapped">
+            <colgroup>
+                <col/>
+                <col/>
+            </colgroup>
+            <tbody>
+            <tr>
+                <th>Label</th>
+            </tr>
+            <tr>
+                <td>NOT</td>
+            </tr>       
+            <tr>
+                <td>NOT2</td>
             </tr>
             </tbody>
         </table>

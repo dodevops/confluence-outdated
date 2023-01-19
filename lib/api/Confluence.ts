@@ -125,7 +125,7 @@ export class Confluence {
     const documentInfo = new DocumentInfo(
       documentId,
       author,
-      lastVersionDate,
+      (lastVersionDate as Moment).toISOString(),
       lastVersionMessage,
       title,
       path,

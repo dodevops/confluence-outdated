@@ -19,8 +19,6 @@ describe('The Configuration API', (): void => {
     chai.expect(configuration.checks[1].labels).to.contain('test2')
     chai.expect(configuration.checks[1].maxAge).to.eq(1234)
 
-    chai.expect(configuration.maintainer).to.have.lengthOf(1)
-
     chai.expect(configuration.exceptions).to.have.lengthOf(1)
     chai.expect(configuration.excludedLabels).to.have.lengthOf(2)
 
@@ -37,5 +35,13 @@ describe('The Configuration API', (): void => {
     await configuration.load()
 
     chai.expect(configuration.exceptions).to.have.lengthOf(0)
+  })
+  it('should support maintainer configuration', async (): Promise<void> => {
+    const mockServer = new MockServer('https://example.com')
+    mockServer.addConfigurationDocumentEndpoint()
+
+    const configuration = new Configuration('https://example.com', 'nobody', 'nothing', '12347')
+    await configuration.load()
+    chai.expect(configuration.maintainer).to.have.lengthOf(1)
   })
 })

@@ -5,7 +5,6 @@ import * as Mail from 'nodemailer/lib/mailer'
 import { DocumentInfo } from './DocumentInfo'
 import * as Handlebars from 'handlebars'
 import { Logger } from 'loglevel'
-import { Moment } from 'moment'
 import log = require('loglevel')
 import moment = require('moment')
 
@@ -27,13 +26,17 @@ export class Notification {
   }
 
   public async notify(documentInfos: Array<DocumentInfo>): Promise<void> {
+    const workingDocumentInfos = []
+    documentInfos.forEach((entry) => {
+      workingDocumentInfos.push(DocumentInfo.fromDocumentInfo(entry))
+    })
     Handlebars.registerHelper('moment', (text, format) => {
       return moment(text).format(format)
     })
     const subjectTemplate = Handlebars.compile(this._configuration.notificationSubjectTemplate)
     const bodyTemplate = Handlebars.compile(this._configuration.notificationBodyTemplate)
 
-    process: for (const documentInfo of documentInfos) {
+    process: for (const documentInfo of workingDocumentInfos) {
       for (const exception of this._configuration.exceptions) {
         if (documentInfo.matchesPath(exception)) {
           this._log.info(`Skipping ${documentInfo.title} because it matches the exception ${exception}`)
@@ -48,20 +51,9 @@ export class Notification {
         }
       }
 
-      documentInfo.lastVersionDate = (documentInfo.lastVersionDate as Moment).toISOString() as string
+      const recipients = documentInfo.getRecipients(this._configuration.maintainer, this._configuration.domain)
 
-      for (const maintainer of this._configuration.maintainer) {
-        if (documentInfo.matchesPath(maintainer.pagePattern)) {
-          documentInfo.author = maintainer.maintainer.replace(/_lastauthor/, documentInfo.author)
-        }
-      }
-
-      let to = documentInfo.author.split(/,/)
-      if (this._configuration.domain) {
-        to = to.map((target) => `${target}@${this._configuration.domain}`)
-      }
-
-      for (const recipient of to) {
+      for (const recipient of recipients) {
         if (!(recipient in this._notificationBatch)) {
           this._notificationBatch[recipient] = []
         }

@@ -1,4 +1,4 @@
-import { Moment } from 'moment'
+import { Maintainer } from './Maintainer'
 
 /**
  * Informations about a Confluence document
@@ -23,7 +23,7 @@ export interface DocumentInfo {
   /**
    * The date of the last version
    */
-  lastVersionDate: Moment | string
+  lastVersionDate: string
   /**
    * The edit message of the last version
    */
@@ -38,12 +38,19 @@ export interface DocumentInfo {
    * @param regexp
    */
   matchesPath(regexp: RegExp): boolean
+
+  /**
+   * Get the notification recipients for this document info. Usually contains of the last author and the
+   * maintainers
+   * @param maintainers
+   */
+  getRecipients(maintainers: Maintainer[], domain?: string): string[]
 }
 
 export class DocumentInfo implements DocumentInfo {
   public id: number
   public author: string
-  public lastVersionDate: Moment | string
+  public lastVersionDate: string
   public lastVersionMessage: string
   public title: string
   public path: Array<string>
@@ -54,7 +61,7 @@ export class DocumentInfo implements DocumentInfo {
   constructor(
     id: number,
     author: string,
-    lastVersionDate: Moment,
+    lastVersionDate: string,
     lastVersionMessage: string,
     title: string,
     path: Array<string>,
@@ -75,5 +82,40 @@ export class DocumentInfo implements DocumentInfo {
 
   public matchesPath(regexp: RegExp): boolean {
     return regexp.test(this.path.concat([this.title]).join('/'))
+  }
+
+  public static fromDocumentInfo(documentInfo: DocumentInfo): DocumentInfo {
+    return new DocumentInfo(
+      documentInfo.id,
+      documentInfo.author,
+      documentInfo.lastVersionDate,
+      documentInfo.lastVersionMessage,
+      documentInfo.title,
+      documentInfo.path,
+      documentInfo.url,
+      documentInfo.shortUrl,
+      documentInfo.labels
+    )
+  }
+
+  public getRecipients(maintainers: Maintainer[], domain?: string): string[] {
+    const retval = []
+    let addLastAuthor = maintainers.length > 0 ? false : true
+    for (const maintainer of maintainers) {
+      if (this.matchesPath(maintainer.pagePattern)) {
+        const maintainers = maintainer.maintainer.split(/,/)
+        if (maintainers.indexOf('_lastauthor') > 0) {
+          addLastAuthor = true
+        }
+        retval.push(...maintainers.filter((entry) => entry != '_lastauthor'))
+      }
+    }
+    if (addLastAuthor) {
+      retval.push(this.author)
+    }
+    if (domain) {
+      return retval.map((target) => `${target}@${domain}`)
+    }
+    return retval
   }
 }
