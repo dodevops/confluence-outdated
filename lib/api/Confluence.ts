@@ -68,7 +68,7 @@ export class Confluence {
    */
   public async getDocumentInfo(documentId: number): Promise<DocumentInfo> {
     this._log.debug(`Getting document information of document ${documentId}`)
-    const documentUrl = `${this.confluenceUrl}/rest/api/content/${documentId}?expand=ancestors,version,metadata.labels`
+    const documentUrl = `${this.confluenceUrl}/rest/api/content/${documentId}?expand=ancestors,version,metadata.labels,history`
     const document = await got(documentUrl, {
       username: this.confluenceUser,
       password: this.confluencePassword,
@@ -76,6 +76,7 @@ export class Confluence {
     }).json<any>()
 
     const author = document.version.by.username ?? null
+    const creator = document.history['createdBy'].username ?? null
 
     if (!author) {
       this._log.error(`Can't get author from this document:
@@ -125,6 +126,7 @@ export class Confluence {
     const documentInfo = new DocumentInfo(
       documentId,
       author,
+      creator,
       (lastVersionDate as Moment).toISOString(),
       lastVersionMessage,
       title,

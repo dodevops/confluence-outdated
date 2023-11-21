@@ -35,6 +35,7 @@ describe('The Notification API', (): void => {
     const documentInfo = new DocumentInfo(
       0,
       'author',
+      'creator',
       moment().toISOString(),
       'message',
       'title',
@@ -73,6 +74,7 @@ describe('The Notification API', (): void => {
     const documentInfo = new DocumentInfo(
       0,
       'author2',
+      'creator',
       moment().toISOString(),
       'message',
       'Test2',
@@ -125,6 +127,7 @@ describe('The Notification API', (): void => {
     const documentInfo = new DocumentInfo(
       0,
       'author',
+      'creator',
       moment().toISOString(),
       'message',
       'title',
@@ -141,6 +144,7 @@ describe('The Notification API', (): void => {
     const documentInfo = new DocumentInfo(
       0,
       'author2',
+      'creator',
       moment().toISOString(),
       'message',
       'NOT',
@@ -158,6 +162,7 @@ describe('The Notification API', (): void => {
     const documentInfo = new DocumentInfo(
       0,
       'author',
+      'creator',
       moment().toISOString(),
       'message',
       'title1',
@@ -169,6 +174,7 @@ describe('The Notification API', (): void => {
     const documentInfo2 = new DocumentInfo(
       0,
       'author',
+      'creator',
       moment().toISOString(),
       'message',
       'title2',
@@ -203,6 +209,7 @@ describe('The Notification API', (): void => {
     const documentInfo = new DocumentInfo(
       0,
       'maintainer',
+      'creator',
       moment().toISOString(),
       'message',
       'Test2',
@@ -238,6 +245,7 @@ describe('The Notification API', (): void => {
     const documentInfo = new DocumentInfo(
       0,
       'author2',
+      'creator',
       moment().toISOString(),
       'message',
       'Title',
@@ -249,6 +257,7 @@ describe('The Notification API', (): void => {
     const documentInfoValid = new DocumentInfo(
       0,
       'author2',
+      'creator',
       moment().toISOString(),
       'message',
       'Title',
@@ -267,6 +276,7 @@ describe('The Notification API', (): void => {
     const documentInfo = new DocumentInfo(
       0,
       'author2',
+      'creator',
       moment().toISOString(),
       'message',
       'Test2',
@@ -278,5 +288,61 @@ describe('The Notification API', (): void => {
     const documentInfoOrig = JSON.stringify(documentInfo)
     await notification.notify([documentInfo])
     chai.expect(JSON.stringify(documentInfo)).to.eq(documentInfoOrig)
+  })
+
+  it('should use creator author if specified', async (): Promise<void> => {
+    configuration = new Configuration('https://example.com', 'nobody', 'nothing', '12348')
+    await configuration.load()
+    const notification = new Notification(configuration, '', confluence, transportStub, false)
+    const documentInfo = new DocumentInfo(
+      0,
+      'author2',
+      'creator',
+      moment().toISOString(),
+      'message',
+      'Test2',
+      ['main', 'Test'],
+      'http://example.com',
+      'test',
+      []
+    )
+    await notification.notify([documentInfo])
+    chai.expect((transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledTwice).to.be.true
+    chai.expect(
+      (transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledWith({
+        from: 'Notification <noreply@example.com>',
+        to: 'maintainer@example.com',
+        subject: Handlebars.compile(MockServer.NOTIFICATION_SUBJECT)({
+          author: 'maintainer@example.com',
+          documentsCount: 1,
+          documents: [documentInfo],
+          multipleDocuments: false,
+        }),
+        html: Handlebars.compile(MockServer.NOTIFICATION_BODY)({
+          author: 'maintainer@example.com',
+          documentsCount: 1,
+          documents: [documentInfo],
+          multipleDocuments: false,
+        }),
+      })
+    ).to.be.true
+    chai.expect(
+      (transportStub as unknown as SinonStubbedInstance<Mail>).sendMail.calledWith({
+        from: 'Notification <noreply@example.com>',
+        to: 'creator@example.com',
+        subject: Handlebars.compile(MockServer.NOTIFICATION_SUBJECT)({
+          author: 'creator@example.com',
+          documentsCount: 1,
+          documents: [documentInfo],
+          multipleDocuments: false,
+        }),
+        html: Handlebars.compile(MockServer.NOTIFICATION_BODY)({
+          author: 'creator@example.com',
+          documentsCount: 1,
+          documents: [documentInfo],
+          multipleDocuments: false,
+        }),
+      })
+    ).to.be.true
   })
 })

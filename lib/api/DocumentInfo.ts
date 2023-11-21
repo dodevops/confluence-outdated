@@ -50,6 +50,7 @@ export interface DocumentInfo {
 export class DocumentInfo implements DocumentInfo {
   public id: number
   public author: string
+  public creator: string
   public lastVersionDate: string
   public lastVersionMessage: string
   public title: string
@@ -61,6 +62,7 @@ export class DocumentInfo implements DocumentInfo {
   constructor(
     id: number,
     author: string,
+    creator: string,
     lastVersionDate: string,
     lastVersionMessage: string,
     title: string,
@@ -71,6 +73,7 @@ export class DocumentInfo implements DocumentInfo {
   ) {
     this.id = id
     this.author = author
+    this.creator = creator
     this.lastVersionDate = lastVersionDate
     this.lastVersionMessage = lastVersionMessage
     this.title = title
@@ -88,6 +91,7 @@ export class DocumentInfo implements DocumentInfo {
     return new DocumentInfo(
       documentInfo.id,
       documentInfo.author,
+      documentInfo.creator,
       documentInfo.lastVersionDate,
       documentInfo.lastVersionMessage,
       documentInfo.title,
@@ -101,17 +105,24 @@ export class DocumentInfo implements DocumentInfo {
   public getRecipients(maintainers: Maintainer[], domain?: string): string[] {
     const retval = []
     let addLastAuthor = maintainers.length > 0 ? false : true
+    let addCreator = false
     for (const maintainer of maintainers) {
       if (this.matchesPath(maintainer.pagePattern)) {
         const maintainers = maintainer.maintainer.split(/,/)
         if (maintainers.indexOf('_lastauthor') > 0) {
           addLastAuthor = true
         }
-        retval.push(...maintainers.filter((entry) => entry != '_lastauthor'))
+        if (maintainers.indexOf('_creator') > 0) {
+          addCreator = true
+        }
+        retval.push(...maintainers.filter((entry) => ['_lastauthor', '_creator'].indexOf(entry) == -1))
       }
     }
     if (addLastAuthor) {
       retval.push(this.author)
+    }
+    if (addCreator) {
+      retval.push(this.creator)
     }
     if (domain) {
       return retval.map((target) => `${target}@${domain}`)

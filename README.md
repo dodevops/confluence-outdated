@@ -50,7 +50,7 @@ A table of maintainers for pages.
 
 - PagePattern: A regular expression that is matched against the full document path. Parent pages are separated through a "/".
 - Maintainer: The users that should receive all notifications for pages matching this pattern (separated by ,). You can 
-  use `_lastauthor` to reference the last author of the page) 
+  use `_lastauthor` to reference the last author of the page and `_creator` to reference the first author of the page.
 
 ### Panel "Exceptions"
 
