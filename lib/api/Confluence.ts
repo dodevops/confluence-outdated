@@ -80,15 +80,16 @@ export class Confluence {
   public async getDocumentInfo(documentId: number): Promise<DocumentInfo> {
     this._log.debug(`Getting document information of document ${documentId}`)
     const documentUrl = `${this.confluenceUrl}/rest/api/content/${documentId}?expand=ancestors,version,metadata.labels,history`
+    let document
     if (this.confluencePersonalAccessToken !== '') {
-      const document = await got(documentUrl, {
+      document = await got(documentUrl, {
         headers: {
           Authorization: 'Bearer ' + this.confluencePersonalAccessToken,
         },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       }).json<any>()
     } else {
-      const document = await got(documentUrl, {
+      document = await got(documentUrl, {
         username: this.confluenceUser,
         password: this.confluencePassword,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
