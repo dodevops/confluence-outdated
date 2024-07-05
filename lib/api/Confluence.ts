@@ -17,12 +17,14 @@ export class Confluence {
   public confluenceUrl: string
   public confluenceUser: string
   public confluencePassword: string
+  public confluencePersonalAccessToken: string
   private _log: Logger
 
-  constructor(confluenceUrl: string, confluenceUser: string, confluencePassword: string) {
+  constructor(confluenceUrl: string, confluenceUser: string, confluencePassword: string, confluencePersonalAccessToken: string,) {
     this.confluenceUrl = confluenceUrl
     this.confluenceUser = confluenceUser
     this.confluencePassword = confluencePassword
+    this.confluencePersonalAccessToken = confluencePersonalAccessToken
 
     this._log = log.getLogger('Confluence')
   }
@@ -47,11 +49,20 @@ export class Confluence {
     this._log.debug(`Searching for documents with ${cql}`)
     do {
       const configurationUrl = `${this.confluenceUrl}/rest/api/content/search?cql=${cql}&start=${start}&limit=${limit}`
-      results = await got(configurationUrl, {
-        username: this.confluenceUser,
-        password: this.confluencePassword,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      }).json<any>()
+      if (this.confluencePersonalAccessToken !== '') {
+        results = await got(configurationUrl, {
+          headers: {
+            'Authorization': 'Bearer ' + this.confluencePersonalAccessToken
+          }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        }).json<any>()
+      } else {
+        results = await got(configurationUrl, {
+          username: this.confluenceUser,
+          password: this.confluencePassword,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        }).json<any>()
+      }
       for (const result of results.results) {
         documentInfos.push(await this.getDocumentInfo(result.id))
       }
@@ -69,12 +80,20 @@ export class Confluence {
   public async getDocumentInfo(documentId: number): Promise<DocumentInfo> {
     this._log.debug(`Getting document information of document ${documentId}`)
     const documentUrl = `${this.confluenceUrl}/rest/api/content/${documentId}?expand=ancestors,version,metadata.labels,history`
-    const document = await got(documentUrl, {
-      username: this.confluenceUser,
-      password: this.confluencePassword,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    }).json<any>()
-
+    if (this.confluencePersonalAccessToken !== '') {
+      const document = await got(documentUrl, {
+        headers: {
+          'Authorization': 'Bearer ' + this.confluencePersonalAccessToken
+        }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      }).json<any>()
+    } else {
+      const document = await got(documentUrl, {
+        username: this.confluenceUser,
+        password: this.confluencePassword,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      }).json<any>()
+    }
     const author = document.version.by.username ?? null
     const creator = document.history['createdBy'].username ?? null
 
@@ -142,31 +161,61 @@ export class Confluence {
   public async createConfigurationDocument(space: string, title: string, parentId: string): Promise<string> {
     const template = await fs.promises.readFile(path.join(__dirname, '..', '..', 'resources', 'configurationDocument.html'), 'utf-8')
 
-    const response = await got
-      .post(`${this.confluenceUrl}/rest/api/content`, {
-        json: {
-          type: 'page',
-          title: title,
-          space: {
-            key: space,
-          },
-          ancestors: [
-            {
-              id: parentId,
+    let response: any
+    if (this.confluencePersonalAccessToken !== '') {
+      response = await got
+        .post(`${this.confluenceUrl}/rest/api/content`, {
+          json: {
+            type: 'page',
+            title: title,
+            space: {
+              key: space,
             },
-          ],
-          body: {
-            storage: {
-              value: template,
-              representation: 'storage',
+            ancestors: [
+              {
+                id: parentId,
+              },
+            ],
+            body: {
+              storage: {
+                value: template,
+                representation: 'storage',
+              },
             },
           },
-        },
-        username: this.confluenceUser,
-        password: this.confluencePassword,
-      })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .json<any>()
+          headers: {
+            'Authorization': 'Bearer ' + this.confluencePersonalAccessToken
+          }
+        })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .json<any>()
+    } else {
+      response = await got
+        .post(`${this.confluenceUrl}/rest/api/content`, {
+          json: {
+            type: 'page',
+            title: title,
+            space: {
+              key: space,
+            },
+            ancestors: [
+              {
+                id: parentId,
+              },
+            ],
+            body: {
+              storage: {
+                value: template,
+                representation: 'storage',
+              },
+            },
+          },
+          username: this.confluenceUser,
+          password: this.confluencePassword,
+        })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .json<any>()
+    }
     return response.id
   }
 }
