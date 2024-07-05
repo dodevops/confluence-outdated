@@ -53,7 +53,7 @@ export class Confluence {
         results = await got(configurationUrl, {
           headers: {
             Authorization: 'Bearer ' + this.confluencePersonalAccessToken,
-          }
+          },
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         }).json<any>()
       } else {
@@ -84,7 +84,7 @@ export class Confluence {
       const document = await got(documentUrl, {
         headers: {
           Authorization: 'Bearer ' + this.confluencePersonalAccessToken,
-        }
+        },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       }).json<any>()
     } else {
@@ -185,7 +185,7 @@ export class Confluence {
           },
           headers: {
             Authorization: 'Bearer ' + this.confluencePersonalAccessToken,
-          }
+          },
         })
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .json<any>()
