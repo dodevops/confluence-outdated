@@ -99,7 +99,13 @@ export class Configuration {
    */
   private _log: Logger
 
-  constructor(confluenceUrl: string, confluenceUser: string, confluencePassword: string, confluencePersonalAccessToken: string, configurationDocumentId: string) {
+  constructor(
+    confluenceUrl: string,
+    confluenceUser: string,
+    confluencePassword: string,
+    confluencePersonalAccessToken: string,
+    configurationDocumentId: string
+  ) {
     this.confluenceUrl = confluenceUrl
     this.confluenceUser = confluenceUser
     this.confluencePassword = confluencePassword
@@ -144,7 +150,7 @@ export class Configuration {
           configurationDocument = await got(configurationUrl, {
             headers: {
               Authorization: 'Bearer ' + this.confluencePersonalAccessToken,
-            }
+            },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
           }).json<any>()
         } else {

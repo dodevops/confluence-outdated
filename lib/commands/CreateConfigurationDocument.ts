@@ -36,7 +36,7 @@ export default class extends Command {
   public async execute(options: CheckOptions): Promise<string> {
     const log = options.getLogger()
 
-    if(options.confluencePersonalAccessToken === '' && (options.confluenceUser === '' || options.confluencePassword === '')) {
+    if (options.confluencePersonalAccessToken === '' && (options.confluenceUser === '' || options.confluencePassword === '')) {
       log.error('user and/or password parameter not set or empty! When not using the token parameter both of these have to be set!')
       return
     }
