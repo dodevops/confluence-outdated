@@ -22,9 +22,9 @@ describe('The Notification API', (): void => {
     mockServer.addConfigurationDocumentEndpoint()
     mockServer.addSearchEndpoint()
     mockServer.addDocumentEndpoint()
-    configuration = new Configuration('https://example.com', 'nobody', 'nothing', '12345')
+    configuration = new Configuration('https://example.com', 'nobody', 'nothing', '', '12345')
     await configuration.load()
-    confluence = new Confluence('https://example.com', 'nobody', 'nothing')
+    confluence = new Confluence('https://example.com', 'nobody', 'nothing', '')
     transportStub = sinon.createStubInstance(Mail.prototype.constructor, {
       sendMail: sinon.stub().resolves(),
     }) as Mail
@@ -68,7 +68,7 @@ describe('The Notification API', (): void => {
     ).to.be.true
   })
   it('should use a maintainer when configured', async (): Promise<void> => {
-    configuration = new Configuration('https://example.com', 'nobody', 'nothing', '12347')
+    configuration = new Configuration('https://example.com', 'nobody', 'nothing', '', '12347')
     await configuration.load()
     const notification = new Notification(configuration, '', confluence, transportStub)
     const documentInfo = new DocumentInfo(
@@ -291,7 +291,7 @@ describe('The Notification API', (): void => {
   })
 
   it('should use creator author if specified', async (): Promise<void> => {
-    configuration = new Configuration('https://example.com', 'nobody', 'nothing', '12348')
+    configuration = new Configuration('https://example.com', 'nobody', 'nothing', '', '12348')
     await configuration.load()
     const notification = new Notification(configuration, '', confluence, transportStub, false)
     const documentInfo = new DocumentInfo(

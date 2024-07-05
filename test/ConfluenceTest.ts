@@ -11,7 +11,7 @@ describe('The Confluence API', (): void => {
     const mockServer = new MockServer('https://example.com')
     mockServer.addSearchEndpoint()
     mockServer.addDocumentEndpoint()
-    const confluence = new Confluence('https://example.com', 'nobody', 'nothing')
+    const confluence = new Confluence('https://example.com', 'nobody', '', 'nothing')
     const results = await confluence.findDocumentsOlderThan('', 1, 1)
     chai.expect(results).to.have.lengthOf(2)
     chai.expect(results[0].url).to.eq('https://example.com/display/SAMPLE/Test')
@@ -35,7 +35,7 @@ describe('The Confluence API', (): void => {
   it('should add a configuration document', async (): Promise<void> => {
     const mockServer = new MockServer('https://example.com')
     mockServer.addCreateEndpoint()
-    const confluence = new Confluence('https://example.com', 'nobody', 'nothing')
+    const confluence = new Confluence('https://example.com', 'nobody', '', 'nothing')
     const result = await confluence.createConfigurationDocument('example', 'test', '0123')
     chai.expect(result).to.eq('12345')
   })

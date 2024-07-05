@@ -11,7 +11,7 @@ describe('The Configuration API', (): void => {
     const mockServer = new MockServer('https://example.com')
     mockServer.addConfigurationDocumentEndpoint()
 
-    const configuration = new Configuration('https://example.com', 'nobody', 'nothing', '12345')
+    const configuration = new Configuration('https://example.com', 'nobody', 'nothing', '', '12345')
     await configuration.load()
     chai.expect(configuration.checks).to.have.lengthOf(2)
     chai.expect(configuration.checks[0].labels).to.contain('test1')
@@ -31,7 +31,7 @@ describe('The Configuration API', (): void => {
     const mockServer = new MockServer('https://example.com')
     mockServer.addConfigurationDocumentEndpoint()
 
-    const configuration = new Configuration('https://example.com', 'nobody', 'nothing', '12346')
+    const configuration = new Configuration('https://example.com', 'nobody', 'nothing', '', '12346')
     await configuration.load()
 
     chai.expect(configuration.exceptions).to.have.lengthOf(0)
@@ -40,7 +40,7 @@ describe('The Configuration API', (): void => {
     const mockServer = new MockServer('https://example.com')
     mockServer.addConfigurationDocumentEndpoint()
 
-    const configuration = new Configuration('https://example.com', 'nobody', 'nothing', '12347')
+    const configuration = new Configuration('https://example.com', 'nobody', 'nothing', '', '12347')
     await configuration.load()
     chai.expect(configuration.maintainer).to.have.lengthOf(1)
   })
