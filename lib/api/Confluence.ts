@@ -20,7 +20,7 @@ export class Confluence {
   public confluencePersonalAccessToken: string
   private _log: Logger
 
-  constructor(confluenceUrl: string, confluenceUser: string, confluencePassword: string, confluencePersonalAccessToken: string,) {
+  constructor(confluenceUrl: string, confluenceUser: string, confluencePassword: string, confluencePersonalAccessToken: string) {
     this.confluenceUrl = confluenceUrl
     this.confluenceUser = confluenceUser
     this.confluencePassword = confluencePassword
@@ -52,7 +52,7 @@ export class Confluence {
       if (this.confluencePersonalAccessToken !== '') {
         results = await got(configurationUrl, {
           headers: {
-            'Authorization': 'Bearer ' + this.confluencePersonalAccessToken
+            Authorization: 'Bearer ' + this.confluencePersonalAccessToken,
           }
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         }).json<any>()
@@ -83,7 +83,7 @@ export class Confluence {
     if (this.confluencePersonalAccessToken !== '') {
       const document = await got(documentUrl, {
         headers: {
-          'Authorization': 'Bearer ' + this.confluencePersonalAccessToken
+          Authorization: 'Bearer ' + this.confluencePersonalAccessToken,
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       }).json<any>()
@@ -184,7 +184,7 @@ export class Confluence {
             },
           },
           headers: {
-            'Authorization': 'Bearer ' + this.confluencePersonalAccessToken
+            Authorization: 'Bearer ' + this.confluencePersonalAccessToken,
           }
         })
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -143,7 +143,7 @@ export class Configuration {
         if (this.confluencePersonalAccessToken !== '') {
           configurationDocument = await got(configurationUrl, {
             headers: {
-              'Authorization': 'Bearer ' + this.confluencePersonalAccessToken
+              Authorization: 'Bearer ' + this.confluencePersonalAccessToken,
             }
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
           }).json<any>()

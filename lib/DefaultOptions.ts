@@ -17,7 +17,7 @@ export class DefaultOptions extends Options {
     description: 'Username for checking all confluence documents',
     required: false,
   })
-  confluenceUser: string = ''
+  confluenceUser: String = ''
 
   @option({
     name: 'password',
@@ -25,7 +25,7 @@ export class DefaultOptions extends Options {
     description: 'Password for the user',
     required: false,
   })
-  confluencePassword: string = ''
+  confluencePassword: String = ''
 
   @option({
     name: 'token',
@@ -33,7 +33,7 @@ export class DefaultOptions extends Options {
     description: 'Personal Access Token for the user. If set user and password will be ignored',
     required: false,
   })
-  confluencePersonalAccessToken: string = ''
+  confluencePersonalAccessToken: String = ''
 
   @option({
     description: 'Log-Level to use (trace, debug, verbose, info, warn, error)',
