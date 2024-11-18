@@ -35,6 +35,11 @@ export class Configuration {
   public confluencePassword: string
 
   /**
+   * The personal access token of the Confluence user
+   */
+  public confluencePersonalAccessToken: string
+
+  /**
    * The document id of the configuration document
    */
   public configurationDocumentId: string
@@ -94,10 +99,17 @@ export class Configuration {
    */
   private _log: Logger
 
-  constructor(confluenceUrl: string, confluenceUser: string, confluencePassword: string, configurationDocumentId: string) {
+  constructor(
+    confluenceUrl: string,
+    confluenceUser: string,
+    confluencePassword: string,
+    confluencePersonalAccessToken: string,
+    configurationDocumentId: string
+  ) {
     this.confluenceUrl = confluenceUrl
     this.confluenceUser = confluenceUser
     this.confluencePassword = confluencePassword
+    this.confluencePersonalAccessToken = confluencePersonalAccessToken
     this.configurationDocumentId = configurationDocumentId
     this._loaded = false
 
@@ -134,11 +146,20 @@ export class Configuration {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let configurationDocument: any
       try {
-        configurationDocument = await got(configurationUrl, {
-          username: this.confluenceUser,
-          password: this.confluencePassword,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        }).json<any>()
+        if (this.confluencePersonalAccessToken !== '') {
+          configurationDocument = await got(configurationUrl, {
+            headers: {
+              Authorization: 'Bearer ' + this.confluencePersonalAccessToken,
+            },
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          }).json<any>()
+        } else {
+          configurationDocument = await got(configurationUrl, {
+            username: this.confluenceUser,
+            password: this.confluencePassword,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          }).json<any>()
+        }
       } catch (e) {
         this._log.error(`Can't fetch configuration document: (${e.name}) ${e.message}`)
         throw e

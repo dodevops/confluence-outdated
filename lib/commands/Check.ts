@@ -38,17 +38,28 @@ export default class extends Command {
   public async execute(options: CheckOptions): Promise<void> {
     const log = options.getLogger()
 
+    if (options.confluencePersonalAccessToken === '' && (options.confluenceUser === '' || options.confluencePassword === '')) {
+      log.error('user and/or password parameter not set or empty! When not using the token parameter both of these have to be set!')
+      return
+    }
+
     log.info('Checking for outdated documents')
 
     const configuration = new Configuration(
       options.confluenceUrl,
       options.confluenceUser,
       options.confluencePassword,
+      options.confluencePersonalAccessToken,
       options.configurationDocumentId
     )
     await configuration.load()
 
-    const confluence = new Confluence(options.confluenceUrl, options.confluenceUser, options.confluencePassword)
+    const confluence = new Confluence(
+      options.confluenceUrl,
+      options.confluenceUser,
+      options.confluencePassword,
+      options.confluencePersonalAccessToken
+    )
 
     const notification = new Notification(configuration, options.smtpTransportUrl, confluence, null, options.dryRun)
 
