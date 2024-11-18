@@ -665,6 +665,34 @@ export class MockServer {
       })
   }
 
+  public addSearchEndpointToken(): void {
+    this._scope
+      .get(new RegExp('/rest/api/content/search\\?cql=.+&start=0'))
+      .matchHeader('authorization', 'Bearer nothing')
+      .reply(200, {
+        results: [
+          {
+            id: 123,
+          },
+        ],
+        start: 0,
+        size: 1,
+        totalSize: 2,
+      })
+      .get(new RegExp('/rest/api/content/search\\?cql=.+&start=1'))
+      .matchHeader('authorization', 'Bearer nothing')
+      .reply(200, {
+        results: [
+          {
+            id: 234,
+          },
+        ],
+        start: 1,
+        size: 1,
+        totalSize: 2,
+      })
+  }
+
   public addDocumentEndpoint(): void {
     this._scope
       .get('/rest/api/content/123?expand=ancestors,version,metadata.labels,history')
@@ -740,6 +768,75 @@ export class MockServer {
       })
   }
 
+  public addDocumentEndpointToken(): void {
+    this._scope
+      .get('/rest/api/content/123?expand=ancestors,version,metadata.labels,history')
+      .matchHeader('authorization', 'Bearer nothing')
+      .reply(200, {
+        _links: {
+          base: 'https://example.com',
+          webui: '/display/SAMPLE/Test',
+        },
+        ancestors: [
+          {
+            title: 'main',
+          },
+        ],
+        version: {
+          by: {
+            username: 'author',
+          },
+          when: '2020-01-01T00:00:00.000+02:00',
+          message: 'Some change',
+        },
+        history: {
+          createdBy: {
+            username: 'creator',
+          },
+        },
+        title: 'Test',
+        metadata: {
+          labels: {
+            results: [
+              {
+                prefix: 'global',
+                name: 'Test',
+                id: '90734603',
+              },
+            ],
+          },
+        },
+      })
+      .get('/rest/api/content/234?expand=ancestors,version,metadata.labels,history')
+      .matchHeader('authorization', 'Bearer nothing')
+      .reply(200, {
+        _links: {
+          base: 'https://example.com',
+          webui: '/display/SAMPLE/Test2',
+        },
+        ancestors: [
+          {
+            title: 'main',
+          },
+          {
+            title: 'Test',
+          },
+        ],
+        history: {
+          createdBy: {
+            username: 'creator',
+          },
+        },
+        version: {
+          by: {
+            username: 'author2',
+          },
+          when: '2020-02-01T00:00:00.000+02:00',
+        },
+        title: 'Test2',
+      })
+  }
+
   public addCreateEndpoint(): void {
     this._scope
       .post('/rest/api/content')
@@ -747,6 +844,18 @@ export class MockServer {
         user: 'nobody',
         pass: 'nothing',
       })
+      .reply(200, (uri, requestBody) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const requestObject = requestBody as Record<string, any>
+        requestObject.id = '12345'
+        return requestObject
+      })
+  }
+
+  public addCreateEndpointToken(): void {
+    this._scope
+      .post('/rest/api/content')
+      .matchHeader('authorization', 'Bearer nothing')
       .reply(200, (uri, requestBody) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const requestObject = requestBody as Record<string, any>
